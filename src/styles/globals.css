@@ -5,6 +5,7 @@
 @layer base {
   :root {
     --color-primary: 97 57 255;
+    --color-primary-200: 124 65 242;
     --color-paragraph: 24 24 27;
     --color-paragraph-light: 93 97 103;
     --color-border: 233 230 240;
@@ -72,6 +73,14 @@
 
   .stop-color {
     stop-color: theme("colors.gray.200")
+  }
+
+  .stop-color-dark {
+    stop-color: rgba(209, 197, 224, 0.07);
+  }
+
+  .nav-sticky {
+    @apply top-0 backdrop-blur-2xl py-1.5
   }
 }
 

@@ -2,19 +2,41 @@
 import { navLinks } from "@/lib/config";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { use, useEffect, useRef, useState } from "react";
 import { Button } from "./ui/Button";
 import { Icons } from "./Icons";
 import { usePathname } from "next/navigation";
 
 const Header = () => {
   const pathname = usePathname();
-  const [mobileMenuIsOpen, setMobileMenuIsOpen] = useState(false);
+  const navRef = useRef<HTMLHeadElement>(null);
+  const [mobileMenuIsOpen, setMobileMenuIsOpen] = useState<Boolean>(false);
 
-  
+  // add sticky class on scroll 200px
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 100 && navRef.current !== null) {
+        navRef.current.classList.add("nav-sticky");
+      } else if (navRef.current !== null) {
+        navRef.current.classList.remove("nav-sticky");
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
-    <header className="fixed left-0 z-[1000000000] w-full bg-transparent  pt-8 transition-transform duration-500">
+    <header
+      className="fixed left-0 z-[1000000000] w-full bg-transparent  pt-8"
+      style={{
+        transition:
+          "background-top 0.5s ease-in-out, padding-top 0.5s ease-in-out",
+      }}
+      ref={navRef}
+    >
       <nav className="container flex  items-center ">
         <div className="nav-logo xl:min-w-[266px]">
           <Link href="/">
@@ -106,9 +128,8 @@ const Header = () => {
           </Button>
           <ul className="flex w-full max-w-[500px] flex-col gap-5">
             {navLinks.map((link, index) => (
-              <li className="group relative">
+              <li key={index} className="group relative">
                 <Link
-                  key={index}
                   href={link.url}
                   className={`font-Inter  rounded-large  dark:hover:bg-dark-200 flex items-center border px-5 py-[5px] text-base font-medium leading-8 text-white transition-colors duration-500 hover:duration-500 lg:px-4  xl:px-5
                   ${

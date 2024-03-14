@@ -3,7 +3,7 @@ import React from "react";
 
 const page = () => {
   return (
-    <div>
+    <>
       <section
         className="bg-gray dark:bg-dark max-mb:pb-[70px] relative overflow-hidden pb-[140px] pt-[230px] max-lg:pb-[100px] max-lg:pt-[160px]"
         id="scene"
@@ -133,7 +133,7 @@ const page = () => {
           </div>
         </div>
       </section>
-    </div>
+    </>
   );
 };
 

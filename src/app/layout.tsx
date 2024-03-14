@@ -1,4 +1,5 @@
 import { AOSInit } from "@/components/aos";
+import { ThemeProvider } from "@/components/theme-provider";
 import "@/styles/globals.css";
 
 import { Inter, Plus_Jakarta_Sans, Playfair_Display } from "next/font/google";
@@ -30,12 +31,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <AOSInit />
       <body
         className={`${inter.variable} ${jakarta_sans.variable} ${playfair.variable} dark:bg-dark-300 font-Inter  relative overflow-x-hidden bg-white text-base antialiased`}
       >
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

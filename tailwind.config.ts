@@ -12,7 +12,10 @@ export default {
         playfair: ["var(--font-playfair)", ...fontFamily.sans],
       },
       colors: {
-        primary: "rgb(var(--color-primary) / <alpha-value>)",
+        primary: {
+          DEFAULT: "rgb(var(--color-primary) / <alpha-value>)",
+          200: "rgb(var(--color-primary-200) / <alpha-value>)",
+        },
         paragraph: {
           DEFAULT: "rgb(var(--color-paragraph) / <alpha-value>)",
           light: "rgb(var(--color-paragraph-light) / <alpha-value>)",
