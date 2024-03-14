@@ -1,3 +1,95 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    --color-primary: 97 57 255;
+    --color-paragraph: 24 24 27;
+    --color-paragraph-light: 93 97 103;
+    --color-border: 233 230 240;
+    --color-border-dark: 54 53 57;
+    --color-dark: 17 16 20;
+    --color-dark-200: 33 32 34;
+    --color-dark-300: 24 23 26;
+    --color-gray: 243 241 248;
+    --color-gray-100: 217 211 224;
+  }
+
+  * {
+    @apply text-paragraph dark:text-white
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-jakarta_sans text-paragraph dark:text-white
+  }
+
+  h1 {
+    @apply text-[36px] max-xl:leading-[1.33] xl:text-[64px] font-bold leading-[1.2]
+  }
+
+  h2 {
+    @apply text-[32px] xl:text-[36px] font-bold leading-[1.33]
+  }
+
+  h3 {
+    @apply text-[22px] xl:text-[24px] font-semibold
+  }
+
+  h4 {
+    @apply text-xl font-normal
+  }
+
+  h5 {
+    @apply text-lg font-normal
+  }
+
+  h6 {
+    @apply text-base font-normal
+  }
+
+  p {
+    @apply font-Inter text-base font-normal leading-[1.75] -tracking-[0.3px] text-paragraph dark:text-white
+  }
+
+  em {
+    @apply not-italic
+  }
+
+  a {
+    @apply inline-block font-Inter text-base font-normal leading-[1.75] -tracking-[0.3px] text-paragraph dark:text-white
+  }
+}
+
+@layer utilities {
+  .container {
+    @apply mx-auto max-xl:px-5 xl:max-w-[1290px]
+  }
+
+  .container-fluid {
+    @apply w-full px-4 1xl:mx-auto
+  }
+
+  .stop-color {
+    stop-color: theme("colors.gray.200")
+  }
+}
+
+
+*::after,
+*::before {
+  @apply leading-none text-[0]
+}
+
+body {
+  overflow-x: hidden;
+  max-width: 100vw
+}
+
+html {
+  @apply scroll-smooth
+}
+
+.nav-sticky {
+  @apply duration-500 transition-all top-0 backdrop-blur-2xl py-1.5
+}
