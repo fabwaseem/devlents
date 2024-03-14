@@ -27,5 +27,15 @@ export const AOSInit = () => {
     hero?.addEventListener("mousemove", parallax);
   }, []);
 
+  useEffect(() => {
+    const c = document.documentElement,
+      d = parseInt(getComputedStyle(c).getPropertyValue("--marquee-elements-displayed")),
+      e = document.querySelector(".marquee-content");
+    if (e) {
+      c.style.setProperty("--marquee-elements", String(e.children.length));
+      for (let t = 0; t < d; t++) e.appendChild(e.children[t].cloneNode(!0));
+    }
+  }, []);
+
   return null;
 };

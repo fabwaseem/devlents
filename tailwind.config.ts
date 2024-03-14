@@ -28,6 +28,7 @@ export default {
           DEFAULT: "rgb(var(--color-dark) / <alpha-value>)",
           200: "rgb(var(--color-dark-200) / <alpha-value>)",
           300: "rgb(var(--color-dark-300) / <alpha-value>)",
+          gradient:"rgb(var(--color-dark-gradient) / <alpha-value>)",
         },
         gray: {
           DEFAULT: "rgb(var(--color-gray) / <alpha-value>)",

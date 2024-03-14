@@ -1,4 +1,5 @@
 import { Icons } from "@/components/Icons";
+import { Logos } from "@/components/Logos";
 
 export const navLinks = [
   {
@@ -88,5 +89,44 @@ export const socialLinks = [
     name: "Linkedin",
     url: "https://www.linkedin.com/",
     icon: Icons.linkedin,
+  },
+];
+
+export const languagesLogos = [
+  {
+    name: "HTML5",
+    logo: Logos.html,
+    url: "components/html-css",
+  },
+  {
+    name: "CSS3",
+    logo: Logos.css,
+    url: "components/html-css",
+  },
+  {
+    name: "React",
+    logo: Logos.react,
+    url: "components/react",
+  },
+
+  {
+    name: "Tailwind CSS",
+    logo: Logos.tailwind,
+    url: "components/tailwind",
+  },
+  {
+    name: "Bootstrap",
+    logo: Logos.bootstrap,
+    url: "components/bootstrap",
+  },
+  {
+    name: "Webflow",
+    logo: Logos.webflow,
+    url: "components/webflow",
+  },
+  {
+    name: "Framer",
+    logo: Logos.framer,
+    url: "components/framer",
   },
 ];

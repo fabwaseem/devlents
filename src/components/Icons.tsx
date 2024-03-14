@@ -12,12 +12,14 @@ import {
   Trash2,
   ChevronDown,
   X,
+  ChevronRight,
 } from "lucide-react";
 
 export type Icon = LucideIcon;
 
 export const Icons = {
   chevronLeft: ChevronLeft,
+  chevronRight: ChevronRight,
   settings: Settings,
   add: Plus,
   sun: SunMedium,
@@ -28,6 +30,25 @@ export const Icons = {
   delete: Trash2,
   X: X,
   chevronDown: ChevronDown,
+  checmarkCircle: ({ ...props }: LucideProps) => (
+    <svg
+      width={20}
+      height={20}
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="mr-3"
+    >
+      <path
+        d="M14.125 7.75L8.62497 13L5.875 10.375M19 10C19 14.9706 14.9706 19 10 19C5.02944 19 1 14.9706 1 10C1 5.02944 5.02944 1 10 1C14.9706 1 19 5.02944 19 10Z"
+        stroke=""
+        className="stroke-paragraph dark:stroke-primary"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  ),
   facebook: ({ ...props }: LucideProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"

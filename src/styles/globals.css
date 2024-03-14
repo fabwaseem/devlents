@@ -13,8 +13,14 @@
     --color-dark: 17 16 20;
     --color-dark-200: 33 32 34;
     --color-dark-300: 24 23 26;
+    --color-dark-gradient: 24 23 25;
     --color-gray: 243 241 248;
     --color-gray-100: 217 211 224;
+    --marquee-width: 100%;
+    --marquee-height: 350px;
+    --marquee-elements-displayed: 6;
+    --marquee-element-width: calc(var(--marquee-width) / var(--marquee-elements-displayed));
+    --marquee-animation-duration: calc(var(--marquee-elements) * 3s)
   }
 
   * {
@@ -105,4 +111,91 @@ html {
 
 .nav-sticky {
   @apply duration-500 transition-all top-0 backdrop-blur-2xl py-1.5
+}
+
+@media(max-width:1024px) {
+  :root {
+    --marquee-elements-displayed: 4
+  }
+}
+
+@media(max-width:768px) {
+  :root {
+    --marquee-elements-displayed: 3
+  }
+}
+
+@media(max-width:640px) {
+  :root {
+    --marquee-elements-displayed: 2
+  }
+}
+
+.marquee-items {
+  width: var(--marquee-width);
+  overflow: hidden;
+  position: relative;
+  margin: 0 auto
+}
+
+.marquee-items .marquee-content {
+  list-style: none;
+  height: 100%;
+  display: flex;
+  animation: scrolling var(--marquee-animation-duration) linear infinite;
+  animation-duration: 30s
+}
+
+.marquee-items .marquee-content:hover {
+  animation-play-state: paused
+}
+
+.marquee-items .marquee-content .marquee-content-list {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  width: var(--marquee-element-width)
+}
+
+.marquee-items .marquee-content .marquee-content-list::after {
+  position: absolute;
+  right: 0px;
+  top: 50%;
+  height: 60px;
+  width: 1px;
+}
+
+@keyframes scrolling {
+  0% {
+    transform: translateX(0)
+  }
+
+  100% {
+    transform: translateX(calc(-1 * var(--marquee-element-width) * var(--marquee-elements)))
+  }
+}
+
+.animate-keep-bounce {
+  animation: bounce-open .3s
+}
+
+@keyframes bounce-open {
+  0% {
+    transform: scale(0.7)
+  }
+
+  45% {
+    transform: scale(1.05)
+  }
+
+  80% {
+    transform: scale(0.95)
+  }
+
+  to {
+    transform: scale(1)
+  }
 }
