@@ -13,6 +13,8 @@ import {
   ChevronDown,
   X,
   ChevronRight,
+  Check,
+  DotSquare,
 } from "lucide-react";
 
 export type Icon = LucideIcon;
@@ -29,6 +31,8 @@ export const Icons = {
   pencil: Pencil,
   delete: Trash2,
   X: X,
+  check: Check,
+  dotFilled:DotSquare,
   chevronDown: ChevronDown,
   checmarkCircle: ({ ...props }: LucideProps) => (
     <svg

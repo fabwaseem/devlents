@@ -262,7 +262,7 @@ const page = () => {
               By using custom Web components for your website, you can bring
               your vision to life.
             </p>
-            <Button variant={"outline"} asChild>
+            <Button variant={"outline"} asChild className="mx-auto w-max">
               <Link href={"/components"}>Sign up now</Link>
             </Button>
             <ul className=" mx-auto mt-20 flex max-w-[815px] items-center justify-between max-lg:mt-5 max-md:flex-col max-md:gap-5">

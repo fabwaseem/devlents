@@ -1,17 +1,48 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import { Logos } from "./Logos";
 import { Button } from "./ui/Button";
+import { signIn } from "next-auth/react";
+import { Icons } from "./Icons";
 
-const SocialLogin = () => {
+const SocialLogin = ({ isLoading }: { isLoading?: boolean }) => {
+  const [isGitHubLoading, setIsGitHubLoading] = useState<boolean>(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState<boolean>(false);
+
+  const disabled = isGoogleLoading || isGitHubLoading || isLoading;
   return (
     <div>
-      <Button variant={"outline"} className=" w-full">
-        <Logos.google />
+      <Button
+        variant={"outline"}
+        className=" group w-full"
+        onClick={() => {
+          setIsGoogleLoading(true);
+          signIn("google");
+        }}
+        disabled={disabled}
+      >
+        {isGoogleLoading ? (
+          <Icons.spinner className="h-6 w-6 animate-spin transition-colors duration-500 group-hover:stroke-white" />
+        ) : (
+          <Logos.google />
+        )}{" "}
         Continue with Google
       </Button>
-      <Button variant={"outline"} className=" mt-2 w-full">
-        <Logos.facebookLogo />
-        Continue with Facebook
+      <Button
+        variant={"outline"}
+        className=" group mt-2 w-full"
+        onClick={() => {
+          setIsGitHubLoading(true);
+          signIn("github");
+        }}
+        disabled={disabled}
+      >
+        {isGitHubLoading ? (
+          <Icons.spinner className="h-6 w-6 animate-spin transition-colors duration-500 group-hover:stroke-white" />
+        ) : (
+          <Logos.gitHub className="transition-colors duration-500 group-hover:fill-white" />
+        )}{" "}
+        Continue with Github
       </Button>
     </div>
   );

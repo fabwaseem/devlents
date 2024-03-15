@@ -7,8 +7,26 @@ import { Button } from "./ui/Button";
 import { Icons } from "./Icons";
 import { usePathname } from "next/navigation";
 import { Input } from "./ui/Input";
+import { Session } from "next-auth";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/Avatar";
+import { getInitials } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { signOut } from "next-auth/react";
 
-const Header = () => {
+const Header = ({ session }: { session: Session | null }) => {
   const pathname = usePathname();
   const isHome = pathname === "/";
   const navRef = useRef<HTMLHeadElement>(null);
@@ -18,7 +36,7 @@ const Header = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 80 && navRef.current !== null) {
+      if (window.scrollY > 40 && navRef.current !== null) {
         navRef.current.classList.add("nav-sticky");
         annoucementRef.current?.classList.add("scale-y-0");
       } else if (navRef.current !== null) {
@@ -26,7 +44,7 @@ const Header = () => {
         annoucementRef.current?.classList.remove("scale-y-0");
       }
     };
-
+    handleScroll();
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -53,20 +71,18 @@ const Header = () => {
       >
         <nav className="container flex  items-center ">
           <div className={`nav-logo ${isHome ? "xl:min-w-[266px]" : ""} `}>
-            <Link href="/">
+            <Link href="/" className=" relative h-8 w-8 md:h-12 md:w-12">
               <Image
                 src="images/logo.svg"
                 alt="logo"
                 className="dark:hidden"
-                width={50}
-                height={50}
+                fill
               />
               <Image
                 src="images/logo.svg"
                 alt="logo"
                 className="hidden dark:inline-block"
-                width={50}
-                height={50}
+                fill
               />
             </Link>
           </div>
@@ -94,7 +110,7 @@ const Header = () => {
                   )}
                 </Link>
                 {link.submenu && (
-                  <ul className="absolute left-0 top-12 z-10  min-w-[250px]   origin-top scale-y-0 rounded-md bg-white p-5 opacity-0 duration-500  group-hover:scale-y-100 group-hover:opacity-100 dark:bg-dark-200 [&>*:not(:first-child)]:mt-2.5 [&>*:not(:last-child)]:border-b [&>*:not(:last-child)]:border-dashed [&>*:not(:last-child)]:border-borderColour dark:[&>*:not(:last-child)]:border-borderColour-dark">
+                  <ul className="absolute left-0 top-12 z-10  min-w-[250px] origin-top scale-y-0 rounded-md bg-white p-5 opacity-0 shadow-md duration-500  group-hover:scale-y-100 group-hover:opacity-100 dark:bg-dark-200 [&>*:not(:first-child)]:mt-2.5 [&>*:not(:last-child)]:border-b [&>*:not(:last-child)]:border-dashed [&>*:not(:last-child)]:border-borderColour dark:[&>*:not(:last-child)]:border-borderColour-dark">
                     {link.submenu.map((sublink, index) => (
                       <li
                         key={index}
@@ -120,11 +136,48 @@ const Header = () => {
                 <Icons.search />
               </Button>
             </li>
-            <li className="max-lg:hidden">
-              <Button asChild size={"sm"}>
-                <Link href="/signup">Sign up</Link>
-              </Button>
-            </li>
+
+            {session ? (
+              <>
+                <li className="max-lg:hidden">
+                  <Button asChild size={"sm"}>
+                    <Link href="/components/upload">
+                      <Icons.add className="stroke-white" size={16} />
+                      Upload
+                    </Link>
+                  </Button>
+                </li>
+                <li>
+                  <DropdownMenu modal={false}>
+                    <DropdownMenuTrigger asChild>
+                      <Avatar>
+                        <AvatarImage src={session.user.image!} />
+                        <AvatarFallback>
+                          {getInitials(session.user.name!)}
+                        </AvatarFallback>
+                      </Avatar>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-56">
+                      <DropdownMenuItem asChild>
+                        <Link href={"/profile"}>Profile</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href={"/profile/settings"}>Settings</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => signOut()}>
+                        Log out
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </li>
+              </>
+            ) : (
+              <li className="max-lg:hidden">
+                <Button asChild size={"sm"}>
+                  <Link href="/signup">Sign up</Link>
+                </Button>
+              </li>
+            )}
             <li className="max-lg:inline-block lg:hidden ">
               <Button
                 size={"icon"}
@@ -184,9 +237,18 @@ const Header = () => {
               ))}
 
               <li className="ml-5">
-                <Button asChild size={"sm"}>
-                  <Link href="/signup">Sign up</Link>
-                </Button>
+                {session ? (
+                  <Button asChild size={"sm"} className="w-max">
+                    <Link href="/components/upload">
+                      <Icons.add className="stroke-white" size={16} />
+                      Upload
+                    </Link>
+                  </Button>
+                ) : (
+                  <Button asChild size={"sm"} className="w-max">
+                    <Link href="/signup">Sign up</Link>
+                  </Button>
+                )}
               </li>
             </ul>
           </div>

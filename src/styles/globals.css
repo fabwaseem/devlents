@@ -199,3 +199,18 @@ html {
     transform: scale(1)
   }
 }
+
+.animate-scale-y {
+  transform-origin: top;
+  animation: scale-y .3s ease-in-out
+}
+
+@keyframes scale-y {
+  from {
+    transform: scaleY(0)
+  }
+
+  to {
+    transform: scaleY(1)
+  }
+}
