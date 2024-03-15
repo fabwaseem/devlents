@@ -142,7 +142,7 @@ const page = () => {
         </div>
       </section>
 
-      {/* FEATURES SECTION */}
+      {/* Categories SECTION */}
       <section className="client bg-white pb-[145px] pt-[140px] dark:bg-dark-300 max-lg:py-20">
         <div className="container  overflow-hidden max-lg:!px-0">
           <div className=" px-10px mx-auto max-w-[550px] text-center max-lg:px-2.5">

@@ -6,20 +6,24 @@ import React, { use, useEffect, useRef, useState } from "react";
 import { Button } from "./ui/Button";
 import { Icons } from "./Icons";
 import { usePathname } from "next/navigation";
+import { Input } from "./ui/Input";
 
 const Header = () => {
   const pathname = usePathname();
+  const isHome = pathname === "/";
   const navRef = useRef<HTMLHeadElement>(null);
+  const annoucementRef = useRef<HTMLDivElement>(null);
   const [mobileMenuIsOpen, setMobileMenuIsOpen] = useState<Boolean>(false);
   const [searchModalIsOpen, setSearchModalIsOpen] = useState<Boolean>(false);
 
-  // add sticky class on scroll 200px
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 100 && navRef.current !== null) {
+      if (window.scrollY > 80 && navRef.current !== null) {
         navRef.current.classList.add("nav-sticky");
+        annoucementRef.current?.classList.add("scale-y-0");
       } else if (navRef.current !== null) {
         navRef.current.classList.remove("nav-sticky");
+        annoucementRef.current?.classList.remove("scale-y-0");
       }
     };
 
@@ -31,16 +35,24 @@ const Header = () => {
 
   return (
     <>
+      {!isHome && (
+        <div
+          className="fixed left-0 top-0 z-[1000000000] w-full origin-top bg-primary py-2 text-center transition-all duration-500"
+          ref={annoucementRef}
+        >
+          <p className="font-medium text-white max-lg:text-sm">
+            We are currently in the process of updating our website.
+          </p>
+        </div>
+      )}
+
       <header
-        className="fixed left-0 z-[1000000000] w-full bg-transparent  pt-8"
-        style={{
-          transition:
-            "background-top 0.5s ease-in-out, padding-top 0.5s ease-in-out",
-        }}
+        className={`fixed left-0 z-[1000000000] w-full bg-transparent transition-all duration-500
+        ${isHome ? "pt-8" : "top-12"}`}
         ref={navRef}
       >
         <nav className="container flex  items-center ">
-          <div className="nav-logo xl:min-w-[266px]">
+          <div className={`nav-logo ${isHome ? "xl:min-w-[266px]" : ""} `}>
             <Link href="/">
               <Image
                 src="images/logo.svg"
@@ -58,7 +70,11 @@ const Header = () => {
               />
             </Link>
           </div>
-          <ul className="nav-list mx-auto hidden rounded-large bg-white p-2.5 shadow-nav dark:bg-dark-200 lg:flex [&>*:not(:last-child)]:me-1">
+          <ul
+            className={`hidden  lg:flex [&>*:not(:last-child)]:me-1
+          ${isHome ? " mx-auto rounded-large bg-white p-2.5 shadow-nav dark:bg-dark-200" : "xl:ml-15 flex-1 lg:ml-7"}
+          `}
+          >
             {navLinks.map((link, index) => (
               <li key={index} className="group relative">
                 <Link
@@ -207,9 +223,8 @@ const Header = () => {
                 <div>
                   <div className="flex">
                     <div className="relative w-full">
-                      <input
-                        className="border- rounded-medium placeholder:text-metal-400 block w-full border border-borderColour bg-transparent  px-5 py-2.5 text-paragraph outline-none transition-all duration-300 placeholder:text-paragraph focus:border-primary focus:outline-none focus:ring-0 dark:placeholder:text-white"
-                        id="#id-10"
+                      <Input
+                        className=" rounded-md"
                         placeholder="Search Components"
                         type="text"
                         defaultValue=""

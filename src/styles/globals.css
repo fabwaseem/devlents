@@ -5,7 +5,7 @@
 @layer base {
   :root {
     --color-primary: 97 57 255;
-    --color-primary-200: 124 65 242;
+    --color-primary-200: 179 160 242;
     --color-paragraph: 24 24 27;
     --color-paragraph-light: 93 97 103;
     --color-border: 233 230 240;
@@ -115,19 +115,19 @@ html {
 
 @media(max-width:1024px) {
   :root {
-    --marquee-elements-displayed: 4
+    --marquee-elements-displayed: 5
   }
 }
 
 @media(max-width:768px) {
   :root {
-    --marquee-elements-displayed: 3
+    --marquee-elements-displayed: 4
   }
 }
 
 @media(max-width:640px) {
   :root {
-    --marquee-elements-displayed: 2
+    --marquee-elements-displayed: 3
   }
 }
 
