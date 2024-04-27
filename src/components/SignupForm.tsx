@@ -8,7 +8,6 @@ import { Button } from "./ui/Button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormMessage,
@@ -16,8 +15,9 @@ import {
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import toast from "./ui/toast";
+
 import { Icons } from "./Icons";
+import { toast } from "react-toastify";
 
 const SignupForm = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -57,12 +57,13 @@ const SignupForm = () => {
     },
   });
 
+  interface ResponseData {
+    msg: string;
+  }
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (values.accpetTerms === false) {
-      return toast({
-        title: "Please accept the terms and conditions",
-        icon: "error",
-      });
+      return toast.error("Please accept the terms and conditions");
     }
     setIsLoading(true);
     // register user send post request to /api/auth/register
@@ -79,18 +80,13 @@ const SignupForm = () => {
       },
       body: JSON.stringify(data),
     });
-    const resData = await response.json();
+    const resData = (await response.json()) as ResponseData;
 
     if (response.status === 201) {
-      toast({
-        title: resData.msg,
-      });
+      toast.success(resData.msg);
       form.reset();
     } else {
-      toast({
-        title: resData.msg,
-        icon: "error",
-      });
+      toast.error(resData.msg);
     }
     setIsLoading(false);
   }
@@ -136,6 +132,7 @@ const SignupForm = () => {
                         id="email"
                         placeholder="Email address"
                         label="Email Address"
+                        autoComplete="email"
                         {...field}
                       />
                     </FormControl>
@@ -143,7 +140,7 @@ const SignupForm = () => {
                   </FormItem>
                 )}
               />
-              <div className="flex flex-col gap-6 md:gap-2 md:flex-row">
+              <div className="flex flex-col gap-6 md:flex-row md:gap-2">
                 <FormField
                   control={form.control}
                   name="password"
@@ -155,6 +152,7 @@ const SignupForm = () => {
                           id="password"
                           placeholder="At least 8 character"
                           label="Password"
+                          autoComplete="new-password"
                           {...field}
                         />
                       </FormControl>
@@ -173,6 +171,7 @@ const SignupForm = () => {
                           id="confirmPassword"
                           placeholder="Confirm Password"
                           label="Confirm Password"
+                          autoComplete="new-password"
                           {...field}
                         />
                       </FormControl>
@@ -182,14 +181,30 @@ const SignupForm = () => {
                 />
               </div>
 
-              <div className=" flex items-center gap-2">
-                <Checkbox
-                  label="By signing up you agree to the"
-                  {...form.register("accpetTerms")}
+              <div className=" flex items-center justify-between gap-2">
+                <FormField
+                  control={form.control}
+                  name="accpetTerms"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <div className=" text-sm leading-none">
+                        By signing up you agree to the{" "}
+                        <Link
+                          href="terms-conditions"
+                          className="link-btn text-right inline-block"
+                        >
+                          Terms & Conditions
+                        </Link>
+                      </div>
+                    </FormItem>
+                  )}
                 />
-                <Link href="terms-conditions" className="link-btn text-sm ">
-                  Terms & Conditions
-                </Link>
               </div>
 
               <Button type="submit" className="w-full ">

@@ -1,11 +1,63 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import SocialLogin from "./SocialLogin";
 import Link from "next/link";
 import { Input } from "./ui/Input";
-import { Checkbox } from "./ui/Checkbox";
 import { Button } from "./ui/Button";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
+import { Icons } from "./Icons";
+import { signIn } from "next-auth/react";
+import { toast } from "react-toastify";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const LoginForm = () => {
+  const searchParams = useSearchParams();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const router = useRouter();
+  const formSchema = z.object({
+    email: z.string().email({
+      message: "Please enter a valid email address",
+    }),
+    password: z.string().min(8, {
+      message: "At least 8 characters long",
+    }),
+  });
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
+
+    const response = await signIn("credentials", {
+      redirect: false,
+      email: values.email,
+      password: values.password,
+    });
+
+    if (response?.status !== 200) {
+      toast.error(response?.error ?? "");
+    } else {
+      toast.success("Login successfully");
+      const from = searchParams.get("from") ?? "/";
+      router.push(from);
+    }
+    setIsLoading(false);
+  }
   return (
     <div className="rounded-medium rounded-lg bg-white p-2.5 shadow-nav dark:bg-dark-200">
       <div className="rounded border border-dashed border-gray-100 bg-white p-12 dark:border-borderColour-dark dark:bg-dark-200 max-md:px-5 max-md:py-7">
@@ -15,45 +67,71 @@ const LoginForm = () => {
             Or
           </span>
         </div>
-        <form>
-          <div className="grid grid-cols-12 gap-y-6 ">
-            <div className="col-span-12">
-              <Input
-                type="email"
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="space-y-6 ">
+              <FormField
+                control={form.control}
                 name="email"
-                id="email"
-                placeholder="Email address"
-                label="Email Address"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        type="email"
+                        id="email"
+                        placeholder="Email address"
+                        label="Email Address"
+                        autoComplete="email"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-            <div className="col-span-full">
-              <Input
-                type="password"
+
+              <FormField
+                control={form.control}
                 name="password"
-                id="password"
-                placeholder="At least 8 character"
-                label="Password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        id="password"
+                        placeholder="At least 8 character"
+                        label="Password"
+                        autoComplete="new-password"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-            <div className="col-span-full flex items-center justify-between">
-              <Checkbox label="Remember me" />
-              <Link href="forget-password" className="link-btn text-sm">
-                Forget Password
-              </Link>
-            </div>
-            <div className="col-span-full ">
-              <Button className="w-full ">Login</Button>
-            </div>
-            <div className="col-span-full ">
+
+              <div className=" flex items-center justify-end gap-2">
+                <Link href="terms-conditions" className="link-btn text-sm ">
+                  Forgot password?
+                </Link>
+              </div>
+
+              <Button type="submit" className="w-full ">
+                {isLoading && (
+                  <Icons.spinner className="h-6 w-6 animate-spin stroke-white transition-colors duration-500" />
+                )}{" "}
+                Login
+              </Button>
+
               <p className="flex items-center justify-center gap-2 text-center font-jakarta_sans text-sm font-medium leading-[24px]">
-                Not registered yet?
+                Don&apos;t have an account?
                 <Link href="/signup" className="link-btn">
-                  Create an Account
+                  Sign up
                 </Link>
               </p>
             </div>
-          </div>
-        </form>
+          </form>
+        </Form>
       </div>
     </div>
   );

@@ -15,9 +15,9 @@ const SocialLogin = ({ isLoading }: { isLoading?: boolean }) => {
       <Button
         variant={"outline"}
         className=" group w-full"
-        onClick={() => {
+        onClick={async () => {
           setIsGoogleLoading(true);
-          signIn("google");
+          await signIn("google");
         }}
         disabled={disabled}
       >
@@ -31,9 +31,9 @@ const SocialLogin = ({ isLoading }: { isLoading?: boolean }) => {
       <Button
         variant={"outline"}
         className=" group mt-2 w-full"
-        onClick={() => {
+        onClick={async() => {
           setIsGitHubLoading(true);
-          signIn("github");
+         await signIn("github");
         }}
         disabled={disabled}
       >

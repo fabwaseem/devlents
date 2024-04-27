@@ -7,6 +7,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
+        sans: ["var(--font-sans)", ...fontFamily.sans],
         Inter: ["var(--font-inter)", ...fontFamily.sans],
         jakarta_sans: ["var(--font-jakarta_sans)", ...fontFamily.sans],
         playfair: ["var(--font-playfair)", ...fontFamily.sans],
@@ -28,7 +29,7 @@ export default {
           DEFAULT: "rgb(var(--color-dark) / <alpha-value>)",
           200: "rgb(var(--color-dark-200) / <alpha-value>)",
           300: "rgb(var(--color-dark-300) / <alpha-value>)",
-          gradient:"rgb(var(--color-dark-gradient) / <alpha-value>)",
+          gradient: "rgb(var(--color-dark-gradient) / <alpha-value>)",
         },
         gray: {
           DEFAULT: "rgb(var(--color-gray) / <alpha-value>)",
@@ -43,6 +44,19 @@ export default {
       },
       borderRadius: {
         large: "40px",
+      },
+      animation: {
+        "fade-in": "fade-in 0.5s ease-in-out",
+      },
+      keyframes: {
+        "fade-in": {
+          "0%": {
+            opacity: " 0",
+          },
+          "100%": {
+            opacity: "1",
+          },
+        },
       },
     },
   },

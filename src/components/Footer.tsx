@@ -1,22 +1,27 @@
 import { contactDetails, footerLinks, socialLinks } from "@/lib/config";
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
 const Footer = () => {
   return (
-    <footer className="dark:bg-dark-300 relative overflow-hidden bg-white pt-20">
+    <footer className="relative overflow-hidden bg-white pt-20 dark:bg-dark-300">
       <div className="container">
         <div className="mb-20 grid grid-cols-12 max-lg:gap-y-10 max-lg:text-center">
           <div className="col-span-12 lg:col-span-6">
-            <img
-              src="images/logo.svg"
+            <Image
+              src="/images/logo.svg"
               alt="logo"
               className="mb-10 inline-block dark:hidden"
+              width={70}
+              height={70}
             />
-            <img
-              src="images/logo.svg"
+            <Image
+              src="/images/logo.svg"
               alt="logo dark version"
               className="mb-10 hidden  dark:inline-block"
+              width={70}
+              height={70}
             />
             <p className="max-w-[350px] max-lg:mx-auto">
               Devlent is a simple and easy way to explore and share web
@@ -27,7 +32,7 @@ const Footer = () => {
           <div className="col-span-12 max-lg:text-center sm:col-span-4 lg:col-span-2">
             <h3 className="mb-8 text-lg font-medium">Explore</h3>
             <ul className="[&>*:not(:last-child)]:mb-3">
-              {footerLinks["Explore"].map((link, index) => (
+              {footerLinks?.Explore.map((link, index) => (
                 <li key={index}>
                   <Link href={link.url} className="link-btn">
                     {link.name}
@@ -39,7 +44,7 @@ const Footer = () => {
           <div className="col-span-12 max-lg:text-center sm:col-span-4 lg:col-span-2">
             <h3 className="mb-8 text-lg font-medium">Components</h3>
             <ul className="[&>*:not(:last-child)]:mb-3">
-              {footerLinks["Components"].map((link, index) => (
+              {footerLinks?.Components.map((link, index) => (
                 <li key={index}>
                   <Link href={link.url} className="link-btn">
                     {link.name}
@@ -66,7 +71,7 @@ const Footer = () => {
                 <li key={index}>
                   <a
                     href={link.url}
-                    className="fill-paragraph hover:fill-primary dark:hover:fill-primary transition-all dark:fill-gray-100"
+                    className="fill-paragraph transition-all hover:fill-primary dark:fill-gray-100 dark:hover:fill-primary"
                   >
                     <link.icon />
                   </a>
@@ -76,15 +81,19 @@ const Footer = () => {
           </div>
         </div>
         <div>
-          <img
-            src="images/footer-seperator.svg"
+          <Image
+            src="/images/footer-seperator.svg"
             alt="footer-seperator"
             className="w-full object-cover dark:hidden"
+            width={1000}
+            height={10}
           />
-          <img
-            src="images/footer-seperator-dark.svg"
+          <Image
+            src="/images/footer-seperator-dark.svg"
             alt="footer-seperator"
             className="hidden w-full object-cover dark:block"
+            width={1000}
+            height={10}
           />
         </div>
         <div className="py-10 max-lg:text-center">

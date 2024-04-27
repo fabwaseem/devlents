@@ -7,7 +7,7 @@ export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
 
   return (
-    <div className="toggle-button fixed right-5 z-[10000000000] max-lg:bottom-2.5 lg:top-1/3">
+    <div className="toggle-button fixed right-5 z-50 top-1/3">
       <button
         type="button"
         className="text-paragraph border-paragraph/25 dark:border-borderColour-dark flex h-10 w-10 items-center justify-center rounded-md border focus:outline-none focus:ring-0 focus:ring-gray-200 dark:text-white"

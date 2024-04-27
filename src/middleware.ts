@@ -41,4 +41,6 @@ export default withAuth(
   },
 );
 
-export const config = { matcher: ["/profile/:path*", "/login", "/signup"] };
+export const config = {
+  matcher: ["/login", "/signup", "/create"],
+};

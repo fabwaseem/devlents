@@ -1,4 +1,4 @@
-import { LucideIcon } from "lucide-react";
+import { type LucideIcon } from "lucide-react";
 
 export type SidebarNavItem = {
   title: string;
@@ -21,4 +21,23 @@ export type SiteConfig = {
     twitter: string;
     github: string;
   };
+};
+
+export type ApiResponse = {
+  msg: string;
+};
+
+type Component = {
+  slug: string;
+  html?: string | null;
+  css?: string | null;
+  javascript?: string | null;
+  thumbnail?: string | null;
+  user: User;
+};
+
+type User = {
+  name: string | null;
+  email: string | null;
+  image: string | null;
 };

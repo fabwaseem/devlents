@@ -1,14 +1,31 @@
 import ComponentCard from "@/components/ComponentCard";
 import { Grids } from "@/components/Grids";
 import { Icons } from "@/components/Icons";
-import { Avatar, AvatarFallback } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
 import { languagesLogos } from "@/lib/config";
+import { formatNumber } from "@/lib/utils";
+import { db } from "@/server/db";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-const page = () => {
+const page = async () => {
+  const [count, components] = await db.$transaction([
+    db.component.count(),
+    db.component.findMany({
+      take: 9,
+      where: {
+        status: "REVIEW",
+      },
+      orderBy: {
+        views: "desc",
+      },
+      include: {
+        user: true,
+        category: true,
+      },
+    }),
+  ]);
   return (
     <>
       {/* HERO SECTION */}
@@ -38,7 +55,7 @@ const page = () => {
           >
             <div className="col-span-12 md:col-span-6 ">
               <p className="mb-8 font-medium uppercase max-lg:mb-4">
-                10k+ Components
+                {formatNumber(count)}+ Components
               </p>
               <h1 className="mb-12 max-md:mb-8">
                 Discover and{" "}
@@ -68,15 +85,19 @@ const page = () => {
             <div className="col-span-12 md:col-span-6 ">
               <div className="relative min-h-[530px] w-full max-md:min-h-[400px] lg:ml-[60px]">
                 <div className="absolute  !left-1/2 !top-1/2 -translate-x-1/2 -translate-y-1/2">
-                  <img
-                    src="images/hero/hero-circle.png"
+                  <Image
+                    src="/images/hero/hero-circle.png"
                     alt="hero Image"
                     className="inline-block dark:hidden"
+                    width={200}
+                    height={200}
                   />
-                  <img
-                    src="images/hero/hero-circle-dark.png"
+                  <Image
+                    src="/images/hero/hero-circle-dark.png"
                     alt="hero Image"
                     className="hidden dark:inline-block"
+                    width={200}
+                    height={200}
                   />
                 </div>
                 <div
@@ -87,15 +108,19 @@ const page = () => {
                   data-aos-duration={1000}
                   data-aos-once="true"
                 >
-                  <img
-                    src="images/hero/hero-policy.png"
+                  <Image
+                    src="/images/hero/hero-policy.png"
                     alt="hero Image"
                     className="inline-block dark:hidden"
+                    width={400}
+                    height={200}
                   />
-                  <img
-                    src="images/hero/hero-policy-dark.png"
+                  <Image
+                    src="/images/hero/hero-policy-dark.png"
                     alt="hero Image"
                     className="hidden dark:inline-block"
+                    width={400}
+                    height={200}
                   />
                 </div>
                 <div
@@ -106,15 +131,19 @@ const page = () => {
                   data-aos-duration={1000}
                   data-aos-once="true"
                 >
-                  <img
-                    src="images/hero/hero-rating.png"
+                  <Image
+                    src="/images/hero/hero-rating.png"
                     alt="hero Image"
                     className="inline-block dark:hidden"
+                    width={250}
+                    height={250}
                   />
-                  <img
-                    src="images/hero/hero-rating-dark.png"
+                  <Image
+                    src="/images/hero/hero-rating-dark.png"
                     alt="hero Image"
                     className="hidden dark:inline-block"
+                    width={250}
+                    height={250}
                   />
                 </div>
                 <div
@@ -125,15 +154,19 @@ const page = () => {
                   data-aos-duration={1000}
                   data-aos-once="true"
                 >
-                  <img
-                    src="images/hero/hero-chart.png"
+                  <Image
+                    src="/images/hero/hero-chart.png"
                     alt="hero Image"
                     className="inline-block dark:hidden"
+                    width={250}
+                    height={400}
                   />
-                  <img
-                    src="images/hero/hero-chart-dark.png"
+                  <Image
+                    src="/images/hero/hero-chart-dark.png"
                     alt="hero Image"
                     className="hidden dark:inline-block"
+                    width={250}
+                    height={400}
                   />
                 </div>
               </div>
@@ -154,25 +187,33 @@ const page = () => {
           </div>
           <div className="relative before:absolute before:-right-0.5 before:top-1/2 before:z-10 before:h-[80px] before:w-[120px] before:-translate-y-1/2  before:bg-gradient-to-l before:from-white before:from-[37.5%] after:absolute after:-left-0.5 after:top-1/2 after:z-10 after:h-[80px] after:w-[120px] after:-translate-y-1/2  after:bg-gradient-to-r after:from-white  after:from-[37.5%] dark:before:from-dark-300 dark:after:from-dark-300">
             <div className="absolute left-0 top-0 flex  h-full w-full flex-col justify-between max-lg:hidden">
-              <img
-                src="images/separator.svg"
+              <Image
+                src="/images/separator.svg"
                 alt="border"
                 className="inline-block dark:hidden"
+                width={1000}
+                height={20}
               />
-              <img
-                src="images/separator.svg"
+              <Image
+                src="/images/separator.svg"
                 alt="border"
                 className="inline-block dark:hidden"
+                width={1000}
+                height={20}
               />
-              <img
-                src="images/separator-dark.svg"
+              <Image
+                src="/images/separator-dark.svg"
                 alt="border"
                 className=" hidden dark:inline-block "
+                width={1000}
+                height={20}
               />
-              <img
-                src="images/separator-dark.svg"
+              <Image
+                src="/images/separator-dark.svg"
                 alt="border"
                 className="hidden dark:inline-block "
+                width={1000}
+                height={20}
               />
             </div>
             <div className="marquee marquee-items">
@@ -194,7 +235,7 @@ const page = () => {
           </div>
           <div className="mt-[60px] flex items-center justify-center ">
             <Button variant={"outline"} asChild>
-              <Link href={"components"}>Browse All Categories</Link>
+              <Link href={"/categories"}>Browse All Categories</Link>
             </Button>
           </div>
         </div>
@@ -225,12 +266,9 @@ const page = () => {
               <div className="lg-ml-[170px] h-[330px] w-[330px] rounded-full bg-primary-200/20 blur-[145px] xl:h-[442px] xl:w-[442px]" />
             </div>
             <div className="grid grid-cols-3  gap-8 max-lg:grid-cols-2 max-sm:grid-cols-1">
-              <ComponentCard />
-              <ComponentCard />
-              <ComponentCard />
-              <ComponentCard />
-              <ComponentCard />
-              <ComponentCard />
+              {components.map((item, index) => (
+                <ComponentCard key={index} {...item} />
+              ))}
             </div>
             <div className="mt-[60px] flex items-center justify-center ">
               <Button variant={"outline"} asChild>
@@ -263,7 +301,7 @@ const page = () => {
               your vision to life.
             </p>
             <Button variant={"outline"} asChild className="mx-auto w-max">
-              <Link href={"/components"}>Sign up now</Link>
+              <Link href={"/signup"}>Sign up now</Link>
             </Button>
             <ul className=" mx-auto mt-20 flex max-w-[815px] items-center justify-between max-lg:mt-5 max-md:flex-col max-md:gap-5">
               <li className="flex items-center">
@@ -272,11 +310,11 @@ const page = () => {
               </li>
               <li className="flex items-center">
                 <Icons.checmarkCircle />
-                <p>No Credit Card Required</p>
+                <p>Free Components</p>
               </li>
               <li className="flex items-center">
                 <Icons.checmarkCircle />
-                <p>No Credit Card Required</p>
+                <p>Easy To Use</p>
               </li>
             </ul>
           </div>

@@ -1,11 +1,16 @@
 import { db } from "@/server/db";
 import bcrypt from "bcrypt";
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
+interface Body {
+  name: string;
+  email: string;
+  password: string;
+}
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    const body: Body = await request.json() as Body;
     const { name, email, password } = body;
 
     if (!name || !email || !password) {
@@ -15,7 +20,7 @@ export async function POST(request: NextRequest) {
         },
         {
           status: 400,
-        }
+        },
       );
     }
 
@@ -39,7 +44,7 @@ export async function POST(request: NextRequest) {
           },
           {
             status: 409,
-          }
+          },
         );
       } else {
         return NextResponse.json(
@@ -48,14 +53,14 @@ export async function POST(request: NextRequest) {
           },
           {
             status: 409,
-          }
+          },
         );
       }
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await db.user.create({
+     await db.user.create({
       data: {
         name,
         email,
@@ -69,7 +74,7 @@ export async function POST(request: NextRequest) {
       },
       {
         status: 201,
-      }
+      },
     );
   } catch (error) {
     return NextResponse.json(
@@ -78,7 +83,7 @@ export async function POST(request: NextRequest) {
       },
       {
         status: 500,
-      }
+      },
     );
   }
 }

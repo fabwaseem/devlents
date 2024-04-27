@@ -1,8 +1,18 @@
 import { AOSInit } from "@/components/aos";
+import ReduxProvider from "@/components/redux-provider";
 import { ThemeProvider } from "@/components/theme-provider";
 import "@/styles/globals.css";
+import {
+  Inter,
+  Plus_Jakarta_Sans,
+  Playfair_Display,
+  Montserrat,
+} from "next/font/google";
 
-import { Inter, Plus_Jakarta_Sans, Playfair_Display } from "next/font/google";
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
 
 const inter = Inter({
   subsets: ["latin"],
@@ -34,16 +44,18 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <AOSInit />
       <body
-        className={`${inter.variable} ${jakarta_sans.variable} ${playfair.variable} dark:bg-dark-300 font-Inter  relative overflow-x-hidden bg-white text-base antialiased`}
+        className={`${inter.variable} ${jakarta_sans.variable} ${playfair.variable} ${montserrat.variable} relative overflow-x-hidden  bg-white font-sans text-base antialiased dark:bg-dark-300`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          
-        >
-          {children}
-        </ThemeProvider>
+        <ReduxProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
+        </ReduxProvider>
       </body>
     </html>
   );
