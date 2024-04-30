@@ -53,7 +53,7 @@ export const Icons = {
   copy: Copy,
   logOut: LogOut,
   clock: Clock,
-  feedback:MessageCircleQuestion,
+  feedback: MessageCircleQuestion,
   checmarkCircle: ({ ...props }: LucideProps) => (
     <svg
       width={20}
@@ -190,6 +190,21 @@ export const Icons = {
         fill="currentColor"
         d="M5 3l-.65 3.34h13.59L17.5 8.5H3.92l-.66 3.33h13.59l-.76 3.81-5.48 1.81-4.75-1.81.33-1.64H2.85l-.79 4 7.85 3 9.05-3 1.2-6.03.24-1.21L21.94 3z"
       />
+    </svg>
+  ),
+  upvote: ({ ...props }: LucideProps) => (
+    <svg
+      width="14"
+      height="8"
+      viewBox="0 0 14 8"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M13.5799 6.25565C13.7496 6.42529 13.8344 6.62619 13.8344 6.85833C13.8344 7.09047 13.7496 7.29136 13.5799 7.46101C13.4103 7.63065 13.2094 7.71547 12.9773 7.71547H0.97726C0.745117 7.71547 0.544224 7.63065 0.374581 7.46101C0.204939 7.29136 0.120117 7.09047 0.120117 6.85833C0.120117 6.62619 0.204939 6.42529 0.374581 6.25565L6.37458 0.25565C6.54422 0.0860069 6.74512 0.00118542 6.97726 0.00118542C7.2094 0.00118542 7.4103 0.0860069 7.57994 0.25565L13.5799 6.25565Z"
+        fill="currentColor"
+      ></path>
     </svg>
   ),
 };

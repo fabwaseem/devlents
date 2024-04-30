@@ -5,15 +5,16 @@ import { type NextRequest, NextResponse } from "next/server";
 interface Body {
   name: string;
   email: string;
+  username: string;
   password: string;
 }
 
 export async function POST(request: NextRequest) {
   try {
     const body: Body = await request.json() as Body;
-    const { name, email, password } = body;
+    const { name, email,username, password } = body;
 
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !username) {
       return NextResponse.json(
         {
           msg: `Missing fields.`,
@@ -58,12 +59,30 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    const usernameTaken = await db.user.findUnique({
+      where: {
+        username,
+      },
+    });
+
+    if (usernameTaken) {
+      return NextResponse.json(
+        {
+          msg: `Username bust be unique.`,
+        },
+        {
+          status: 409,
+        },
+      );
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
      await db.user.create({
       data: {
         name,
-        email,
+         email,
+        username,
         password: hashedPassword,
       },
     });

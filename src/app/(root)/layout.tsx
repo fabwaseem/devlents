@@ -1,7 +1,7 @@
 import Feedback from "@/components/Feedback";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
-import TopLoader from "@/components/TopLoader";
+import { Parallax } from "@/components/aos";
 import { ThemeToggle } from "@/components/theme-toggle";
 import ToastProvider from "@/components/toast-provider";
 import { getServerAuthSession } from "@/server/auth";
@@ -12,11 +12,11 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
 
   return (
     <>
-      <TopLoader />
+      <Parallax />
       <ThemeToggle />
       <Header session={session} />
       <main className="min-h-screen">{children}</main>
-      <Feedback />
+      {session && <Feedback />}
       <Footer />
       <ToastProvider />
     </>

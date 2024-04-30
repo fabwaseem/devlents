@@ -1,3 +1,4 @@
+import { Component, ComponentStatus } from "@prisma/client";
 import { type LucideIcon } from "lucide-react";
 
 export type SidebarNavItem = {
@@ -27,17 +28,20 @@ export type ApiResponse = {
   msg: string;
 };
 
-type Component = {
-  slug: string;
-  html?: string | null;
-  css?: string | null;
-  javascript?: string | null;
-  thumbnail?: string | null;
-  user: User;
-};
-
-type User = {
-  name: string | null;
-  email: string | null;
-  image: string | null;
+type ComponentData = Component & {
+  status: ComponentStatus;
+  user: {
+    id: string;
+    username: string?;
+  };
+  category: {
+    id: string;
+    title: string;
+  };
+  upvotes: { id: string }[];
+  favourites: { id: string }[];
+  _count: {
+    upvotes: number;
+    favourites: number;
+  };
 };

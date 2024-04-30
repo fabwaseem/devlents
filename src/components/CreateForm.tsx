@@ -15,23 +15,20 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import type { Component, User } from "@prisma/client";
 import useDebounce from "@/app/hook/useDebounce";
-import { formatNumber } from "@/lib/utils";
-import Link from "next/link";
 import { type Session } from "next-auth";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import ReactShadowRoot from "react-shadow-root";
+import parse from "html-react-parser";
+import { Allotment } from "allotment";
 type Props = Component & {
   user: User;
 };
 
 const CreateForm = ({
   component,
-  viewMode = false,
-  session,
 }: {
   component?: Props;
-  viewMode?: boolean;
-  session?: Session | null;
 }) => {
   const [debouncedCode, code, setCode] = useDebounce(
     {
@@ -99,7 +96,7 @@ const CreateForm = ({
       if (response.status === 201) {
         form.reset();
         toast.success(resData.msg);
-        router.push(`/components/${resData.component.slug}`);
+        router.push(`/component/${resData.component.slug}`);
       } else {
         toast.error(resData.msg);
       }
@@ -128,7 +125,7 @@ const CreateForm = ({
       if (response.status === 201) {
         form.reset();
         toast.success(resData.msg);
-        router.push(`/components/${resData.component.slug}`);
+        router.push(`/component/${resData.component.slug}`);
       } else {
         toast.error(resData.msg);
       }
@@ -164,138 +161,77 @@ const CreateForm = ({
     }
   }, [code, component]);
 
-  const handleDelete = async () => {
-    setIsLoading(true);
-    try {
-      const response = await axios.delete(`/api/components`, {
-        data: {
-          id: component?.id,
-        },
-      });
-      if (response.status === 200) {
-        toast.success("Deleted successfully");
-        router.push(`/profile/${session?.user.id}`);
-      } else {
-        toast.error("Something went wrong");
-      }
-    } catch (error) {
-      if (typeof error === "string") {
-        toast.error(error);
-      }
-    }
-    setIsLoading(false);
-  };
-
   return (
     <>
       <div className="container flex h-full flex-col pb-4">
-        <CodeEditor code={debouncedCode} onChange={onChange} />
+        <div className="min-h-[500px] flex-1 overflow-hidden rounded-xl border dark:border-gray">
+          <Allotment>
+            <Allotment.Pane minSize={300}>
+              <CodeEditor code={debouncedCode} onChange={onChange} />
+            </Allotment.Pane>
+            <Allotment.Pane minSize={300}>
+              <div className="relative z-[1] flex h-full w-full  items-center  justify-center bg-gray dark:bg-dark-200">
+                <ReactShadowRoot>
+                  <style>{debouncedCode.css}</style>
+                  {parse(debouncedCode.html + "")}
+                </ReactShadowRoot>
+              </div>
+            </Allotment.Pane>
+          </Allotment>
+        </div>
+
         <div className="mt-4 rounded-xl bg-gray p-2  dark:bg-dark">
-          {viewMode ? (
-            <div className="flex h-full min-h-[40px] flex-col flex-wrap items-stretch justify-between gap-2 md:flex-row">
-              <div className=" flex items-center gap-2">
-                <div className="h-full w-[2px] bg-dark dark:bg-dark-300" />
-                <div className="flex items-center pl-3">
-                  {formatNumber(component?.views ?? 0)} views
-                </div>
-                <div className="mx-5 h-full w-[2px] bg-dark dark:bg-dark-300" />
-                {component?.user?.id === session?.user?.id && (
-                  <Button variant={"icon"} size={"icon"} onClick={handleDelete}>
-                    <Icons.delete />
-                  </Button>
-                )}
-                {/* <form method="post" action="/favorites" className="flex h-full">
-                  <input
-                    type="hidden"
-                    name="postId"
-                    defaultValue="ecfb5fe3-bb59-44df-8771-2de2ed5b5208"
-                  />
-                  <input type="hidden" name="action" defaultValue="save" />
-                  <button
-                    type="submit"
-                    className="hover:bg-dark-600 max-md:bg-dark-600 text-offwhite false flex cursor-pointer items-center gap-3 overflow-hidden rounded-lg border-none bg-transparent px-5 pl-4 font-sans text-sm font-semibold transition-colors max-md:h-[40px] max-md:w-full"
-                  >
-                    <div className="flex items-center gap-1.5  text-white">
-                      <Icons.heart />
-                      486
-                    </div>
-                    <div className="flex items-center">Saves</div>
-                  </button>
-                </form> */}
-              </div>
-              <Link href={`/create?componentId=${component?.id}`}>
-                {isChanged ? (
-                  <>
-                    <Button className="hidden md:flex">
-                      <Icons.copy /> Create Duplicate
-                    </Button>
-                    <Button size={"icon"} className=" md:hidden">
-                      <Icons.copy />
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <Button variant={"outline"} className="hidden md:flex">
-                      <Icons.copy /> Duplicate
-                    </Button>
-                    <Button
-                      size={"icon"}
-                      variant={"outline"}
-                      className=" md:hidden"
-                    >
-                      <Icons.copy />
-                    </Button>
-                  </>
-                )}
-              </Link>
+          <div className="flex h-full min-h-[40px]  items-stretch justify-between gap-2">
+            <div className="left flex items-center gap-2">
+              <div className="h-full w-[2px] bg-dark" />
+              <Button variant={"icon"} size={"icon"}>
+                <Icons.eye size={16} />
+              </Button>
             </div>
-          ) : (
-            <div className="flex h-full min-h-[40px]  items-stretch justify-between gap-2">
-              <div className="left flex items-center gap-2">
-                <div className="h-full w-[2px] bg-dark" />
-                <Button variant={"icon"} size={"icon"}>
-                  <Icons.eye />
-                </Button>
-              </div>
-              <div className="flex items-stretch gap-2">
-                <Button
-                  variant={"outline"}
-                  className="hidden md:flex"
-                  onClick={saveDraft}
-                  disabled={
-                    isLoading || code.html.length + code.css.length < 10
-                  }
-                >
-                  <Icons.folderOpen /> Save as a draft
-                </Button>
-                <Button
-                  onClick={onOpenModal}
-                  className="hidden md:flex"
-                  disabled={
-                    isLoading || code.html.length + code.css.length < 10
-                  }
-                >
-                  <Icons.rocket />
-                  Submit for review
-                </Button>
-                <Button
-                  variant={"outline"}
-                  size={"icon"}
-                  className=" md:hidden"
-                  onClick={saveDraft}
-                >
-                  <Icons.folderOpen />
-                </Button>
-                <Button
-                  onClick={onOpenModal}
-                  size={"icon"}
-                  className=" md:hidden"
-                >
-                  <Icons.rocket />
-                </Button>
-              </div>
+            <div className="flex items-stretch gap-2">
+              <Button
+                variant={"outline"}
+                className="hidden md:flex"
+                size={"sm"}
+                onClick={saveDraft}
+                disabled={
+                  isLoading ||
+                  code.html.length + code.css.length < 10 ||
+                  !isChanged
+                }
+              >
+                <Icons.folderOpen size={16} /> Save as a draft
+              </Button>
+              <Button
+                onClick={onOpenModal}
+                className="hidden md:flex"
+                size={"sm"}
+                disabled={
+                  isLoading ||
+                  code.html.length + code.css.length < 10 ||
+                  !isChanged
+                }
+              >
+                <Icons.rocket size={16} />
+                Submit for review
+              </Button>
+              <Button
+                variant={"outline"}
+                size={"icon"}
+                className=" md:hidden"
+                onClick={saveDraft}
+              >
+                <Icons.folderOpen size={16} />
+              </Button>
+              <Button
+                onClick={onOpenModal}
+                size={"icon"}
+                className=" md:hidden"
+              >
+                <Icons.rocket size={16} />
+              </Button>
             </div>
-          )}
+          </div>
         </div>
       </div>
       <Modal

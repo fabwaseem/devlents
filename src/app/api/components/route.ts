@@ -12,17 +12,6 @@ export async function DELETE(request: NextRequest) {
 
     const session = await getServerAuthSession();
 
-    if (!session?.user) {
-      return NextResponse.json(
-        {
-          msg: `Unauthorized`,
-        },
-        {
-          status: 401,
-        },
-      );
-    }
-
     const component = await db.component.findUnique({
       where: {
         id,

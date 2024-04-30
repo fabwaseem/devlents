@@ -5,22 +5,10 @@ import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
+import { faker } from "@faker-js/faker";
 
 import { env } from "@/env";
 import { db } from "@/server/db";
-
-// const adapter = PrismaAdapter(db) as Adapter;
-
-// adapter.createUser = async (profile) => {
-//   console.log("i logged'" +profile);
-//   return await db.user.create({
-//     data: {
-//       email: profile.email,
-//       name: profile.name,
-//       image: profile.image,
-//     },
-//   });
-// };
 
 /**
  * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
@@ -102,34 +90,30 @@ export const authOptions: NextAuthOptions = {
     GithubProvider({
       clientId: env.GITHUB_CLIENT_ID as string,
       clientSecret: env.GITHUB_CLIENT_SECRET as string,
-      profile(profile) {
-        return {
-          id: profile.id.toString(),
-          name: profile.name || profile.login,
-          email: profile.email,
-          image: profile.avatar_url,
-          username:
-            profile.login ||
-            `${profile.email.split("@")[0]}_${Math.random().toString(36).substring(7)}`,
-          isEmailVerified: true,
-        };
-      },
     }),
     GoogleProvider({
       clientId: env.GOOGLE_CLIENT_ID as string,
       clientSecret: env.GOOGLE_CLIENT_SECRET as string,
-      profile(profile) {
-        return {
-          id: profile.sub,
-          name: profile.name,
-          email: profile.email,
-          image: profile.picture,
-          username: `${profile.email.split("@")[0]}_${Math.random().toString(36).substring(7)}`,
-          isEmailVerified: profile.email_verified,
-        };
-      },
     }),
   ],
+  events: {
+    async linkAccount({ user }) {
+      const username = user.name
+        ? faker.internet.userName({
+            firstName: user.name.split(" ")[0],
+            lastName: user.name.split(" ")[1],
+          }).toLowerCase()
+        : "";
+
+      await db.user.update({
+        where: { id: user.id },
+        data: {
+          username,
+          emailVerified: new Date(),
+        },
+      });
+    },
+  },
   secret: process.env.NEXTAUTH_SECRET,
   debug: env.NODE_ENV === "development",
   callbacks: {
@@ -140,10 +124,6 @@ export const authOptions: NextAuthOptions = {
         session.user.username = token.username;
         session.user.email = token.email;
         session.user.image = token.picture;
-        session.user.location = token.location;
-        session.user.website = token.website;
-        session.user.company = token.company;
-        session.user.bio = token.bio;
       }
 
       return session;
@@ -165,13 +145,9 @@ export const authOptions: NextAuthOptions = {
       return {
         id: dbUser.id,
         name: dbUser.name,
-        username: dbUser.username,
+        username: dbUser.username ?? "",
         email: dbUser.email,
         picture: dbUser.image,
-        location: dbUser.location as string,
-        website: dbUser.website as string,
-        company: dbUser.company as string,
-        bio: dbUser.bio as string,
       };
     },
   },

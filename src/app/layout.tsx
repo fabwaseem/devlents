@@ -1,6 +1,8 @@
-import { AOSInit } from "@/components/aos";
+import Providers from "@/components/Providers";
+
 import ReduxProvider from "@/components/redux-provider";
 import { ThemeProvider } from "@/components/theme-provider";
+import { getServerAuthSession } from "@/server/auth";
 import "@/styles/globals.css";
 import {
   Inter,
@@ -8,6 +10,7 @@ import {
   Playfair_Display,
   Montserrat,
 } from "next/font/google";
+import NextTopLoader from "nextjs-toploader";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -35,27 +38,31 @@ export const metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getServerAuthSession();
   return (
     <html lang="en" suppressHydrationWarning>
-      <AOSInit />
       <body
         className={`${inter.variable} ${jakarta_sans.variable} ${playfair.variable} ${montserrat.variable} relative overflow-x-hidden  bg-white font-sans text-base antialiased dark:bg-dark-300`}
       >
-        <ReduxProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-          </ThemeProvider>
-        </ReduxProvider>
+        <Providers session={session}>
+          <ReduxProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <NextTopLoader color="#6139ff" />
+
+              {children}
+            </ThemeProvider>
+          </ReduxProvider>
+        </Providers>
       </body>
     </html>
   );

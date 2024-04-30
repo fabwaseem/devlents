@@ -1,19 +1,24 @@
 "use client";
 import React from "react";
 import parse from "html-react-parser";
-import type { Component, User, Category } from "@prisma/client";
 import Link from "next/link";
 import ReactShadowRoot from "react-shadow-root";
 import { formatNumber } from "@/lib/utils";
 import { CodeIcon, Eye, ThumbsUp } from "lucide-react";
+import { ComponentData } from "@/types";
+import { Session } from "next-auth";
 
-// add user type in the component
-type ComponentCardProps = Component & {
-  user: User;
-  category: Category;
-};
+const ComponentCard = ({
+  component,
+  session,
+}: {
+  component: ComponentData;
+  session: Session | null;
+  }) => {
 
-const ComponentCard = (component: ComponentCardProps) => {
+  const isOwner = session?.user?.id === component.user.id;
+  const isFavourite = component.favourites.length > 0;
+  const isUpvoted = component.upvotes.length > 0;
 
   return (
     <div>
@@ -26,7 +31,7 @@ const ComponentCard = (component: ComponentCardProps) => {
         </div>
         <Link
           className="absolute bottom-3 right-3 z-10 flex items-center gap-2 rounded-lg bg-white px-2 py-1 font-sans font-semibold opacity-0 transition-opacity group-hover:opacity-100 dark:bg-dark-300"
-          href={`/components/${component.slug}`}
+          href={`/component/${component.slug}`}
         >
           <CodeIcon size={16} />
           Get code
@@ -45,7 +50,7 @@ const ComponentCard = (component: ComponentCardProps) => {
             {formatNumber(component.views)} <Eye size={16} />
           </span>
           <span className="flex items-center gap-2">
-            {formatNumber(component.upvotes)} <ThumbsUp size={16} />
+            {formatNumber(component._count.upvotes)} <ThumbsUp size={16} />
           </span>
         </div>
       </div>

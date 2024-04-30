@@ -9,11 +9,7 @@ const Page = async () => {
       <main>
         <section className="mb-150 pt-[150px]">
           <div
-            className="aos-init aos-animate container relative"
-            data-aos="fade-up"
-            data-aos-offset={200}
-            data-aos-duration={1000}
-            data-aos-once="true"
+            className=" container relative"
           >
             <div className="mx-auto max-w-[700px] text-center">
               <h1 className="from-0to-primary/0 bg-gradient-to-b from-primary to-90% bg-clip-text text-[140px] font-bold leading-[1] text-transparent dark:text-transparent">

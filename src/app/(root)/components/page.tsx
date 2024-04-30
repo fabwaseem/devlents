@@ -7,12 +7,18 @@ import { Button } from "@/components/ui/Button";
 import Link from "next/link";
 import { Icons } from "@/components/Icons";
 import Filters from "./_filters";
+import { includeComponent } from "@/lib/prisma/includeComponent";
+import { getServerAuthSession } from "@/server/auth";
+import SearchForm from "../SearchForm";
+import { componentFilters } from "@/lib/prisma/componentFilters";
+
 
 interface Props {
   searchParams: {
     page?: number;
     category?: string;
     sortBy?: string;
+    query?: string;
   };
 }
 const page = async ({ searchParams }: Props) => {
@@ -21,33 +27,19 @@ const page = async ({ searchParams }: Props) => {
   if (page < 1) {
     return notFound();
   }
-  const sortBy = searchParams.sortBy ?? "latest";
-
-  let sort = {};
-  if (sortBy === "latest") {
-    sort = { createdAt: "desc" };
-  } else if (sortBy === "favourites") {
-    sort = { favourites: "desc" };
-  } else if (sortBy === "views") {
-    sort = { views: "desc" };
-  } else if (sortBy === "upvotes") {
-    sort = { upvotes: "desc" };
-  }
+  const session = await getServerAuthSession();
 
   const [count, components] = await db.$transaction([
     db.component.count(),
     db.component.findMany({
       take: perPage,
       skip: perPage * (page - 1),
-      where: {
-        status: "review",
-        category: { slug: searchParams.category },
-      },
-      orderBy: sort,
-      include: {
-        user: true,
-        category: true,
-      },
+      ...componentFilters({
+        searchParams,
+        type: "components",
+        status: "PUBLISHED",
+      }),
+      include: includeComponent(session?.user.id),
     }),
   ]);
 
@@ -56,12 +48,17 @@ const page = async ({ searchParams }: Props) => {
   return (
     <section className="relative  mb-[150px] min-h-screen pt-[150px] max-md:mb-[100px]">
       <div className="container">
-        <Filters />
+        <div className="flex flex-col items-center justify-between lg:flex-row">
+          <Filters />
+          <div className="w-full max-w-[320px]">
+            <SearchForm type="COMPONENTS" />
+          </div>
+        </div>
         {components.length ? (
           <>
-            <div className=" grid grid-cols-3 mt-5  gap-8 max-lg:grid-cols-2 max-sm:grid-cols-1">
+            <div className=" mt-5 grid grid-cols-3  gap-8 max-lg:grid-cols-2 max-sm:grid-cols-1">
               {components.map((item, index) => (
-                <ComponentCard key={index} {...item} />
+                <ComponentCard key={index} component={item} session={session} />
               ))}
             </div>
             <Pagination totalPages={totalPages} />

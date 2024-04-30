@@ -44,10 +44,21 @@ export const componentCategories = [
   },
 ];
 
-const componentLinks = componentCategories.map((item) => ({
-  name: item.label + "s",
-  url: `/components?category=${item.value}`,
-}));
+const componentLinks = [
+  {
+    name: "All",
+    url: "/components",
+  },
+  ...componentCategories.map((item) => ({
+    name: item.label + "s",
+    url: `/components?category=${item.value}`,
+  })),
+  {
+    name: "Favourites",
+    url: "/components/favourites",
+  },
+];
+
 export const navLinks = [
   {
     name: "Home",
@@ -56,7 +67,7 @@ export const navLinks = [
   {
     name: "Components",
     url: "/components",
-    submenu:componentLinks
+    submenu: componentLinks,
   },
   {
     name: "About",
@@ -210,5 +221,16 @@ export const team = [
         icon: Icons.linkedin,
       },
     ],
+  },
+];
+
+export const componentTypes = [
+  {
+    label: "CSS",
+    value: "css",
+  },
+  {
+    label: "Tailwind CSS",
+    value: "tailwindcss",
   },
 ];

@@ -10,10 +10,7 @@ const page = () => {
         <div className="container">
           <div
             className="mx-auto max-w-[948px] text-center"
-            data-aos="fade-up"
-            data-aos-offset={200}
-            data-aos-duration={1000}
-            data-aos-once="true"
+
           >
             <p className="mb-4 font-medium uppercase">about devlents</p>
             <h1 className="mb-10 max-lg:mb-10">
@@ -37,10 +34,7 @@ const page = () => {
           <div className="max-md:mb-25 relative z-10 mb-[160px] grid  grid-cols-3 items-center gap-10 max-md:grid-cols-1">
             <div
               className="rounded-medium  overflow-hidden bg-white p-2.5 shadow-box dark:bg-dark-200"
-              data-aos="fade-up"
-              data-aos-offset={200}
-              data-aos-duration={1000}
-              data-aos-once="true"
+
             >
               {/* <img
                 src="images/about/about1.png"
@@ -50,11 +44,7 @@ const page = () => {
             </div>
             <div
               className="rounded-medium  overflow-hidden bg-white p-2.5 shadow-box dark:bg-dark-200"
-              data-aos="fade-up"
-              data-aos-offset={200}
-              data-aos-duration={1000}
-              data-aos-delay={150}
-              data-aos-once="true"
+
             >
               {/* <img
                 src="images/about/about2.png"
@@ -64,11 +54,7 @@ const page = () => {
             </div>
             <div
               className="rounded-medium  overflow-hidden bg-white p-2.5 shadow-box dark:bg-dark-200"
-              data-aos="fade-up"
-              data-aos-offset={200}
-              data-aos-duration={1000}
-              data-aos-delay={300}
-              data-aos-once="true"
+
             >
               {/* <img
                 src="images/about/about3.png"

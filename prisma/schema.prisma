@@ -33,24 +33,20 @@ model Account {
   @@unique([provider, providerAccountId])
 }
 
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+enum Role {
+  USER
+  ADMIN
 }
 
 model User {
   id              String      @id @default(cuid())
   name            String
   email           String      @unique
-  username        String      @unique
-  isEmailVerified Boolean     @default(false)
+  username        String?      @unique
   emailVerified   DateTime?
   image           String?
   password        String?     @db.Text
-  role            String      @default("user")
+  role           Role        @default(USER)
   bio             String?
   location        String?
   website         String?
@@ -59,11 +55,11 @@ model User {
   github          String?
   linkedin        String?
   accounts        Account[]
-  sessions        Session[]
   UserTokens      UserToken[]
   components      Component[]
   feedbacks       Feedback[]
-  totalLents      Int         @default(0)
+  favouriteComps  Component[] @relation("FavouriteComps")
+  upvotedComps    Component[] @relation("UpvotedComps")
   lents           Lent[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -80,13 +76,16 @@ model UserToken {
   updatedAt DateTime @updatedAt
 }
 
-model VerificationToken {
-  id         String   @id @default(cuid())
-  identifier String
-  token      String
-  expires    DateTime
+enum ComponentStatus {
+  DRAFT
+  REVIEW
+  PUBLISHED
+  REJECTED
+}
 
-  @@unique([identifier, token])
+enum ComponentType {
+  CSS
+  TAILWINDCSS
 }
 
 model Component {
@@ -97,12 +96,12 @@ model Component {
   css        String? @db.Text
   javascript String? @db.Text
 
-  type String @default("css")
+  type      ComponentType @default(CSS)
 
   views      Int    @default(0)
-  status     String @default("review")
-  favourites Int    @default(0)
-  upvotes    Int    @default(0)
+  status     ComponentStatus @default(REVIEW)
+  favourites       User[] @relation("FavouriteComps")
+  upvotes          User[] @relation("UpvotedComps")
 
   user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   category Category @relation(fields: [categoryId], references: [id])

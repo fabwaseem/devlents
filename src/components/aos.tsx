@@ -1,17 +1,9 @@
 "use client";
 
 import { useEffect } from "react";
-import AOS from "aos";
-import "aos/dist/aos.css";
 
-export const AOSInit = () => {
-  useEffect(() => {
-    AOS.init({
-      // disable: function () {
-      //   return window.innerWidth < 768;
-      // },
-    });
-  }, []);
+export const Parallax = () => {
+
 
   useEffect(() => {
     const hero = document.getElementById("scene");

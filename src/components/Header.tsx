@@ -17,7 +17,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { signOut } from "next-auth/react";
-import link from "next/link";
 
 const Header = ({ session }: { session: Session | null }) => {
   const pathname = usePathname();
@@ -25,7 +24,6 @@ const Header = ({ session }: { session: Session | null }) => {
   const navRef = useRef<HTMLHeadElement>(null);
   const annoucementRef = useRef<HTMLDivElement>(null);
   const [mobileMenuIsOpen, setMobileMenuIsOpen] = useState<boolean>(false);
-  const [searchModalIsOpen, setSearchModalIsOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -46,7 +44,6 @@ const Header = ({ session }: { session: Session | null }) => {
 
   useEffect(() => {
     setMobileMenuIsOpen(false);
-    setSearchModalIsOpen(false);
   }, [pathname]);
 
   const showNotification = false;
@@ -114,9 +111,6 @@ const Header = ({ session }: { session: Session | null }) => {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="grid w-[600px] grid-cols-3 gap-5">
                       <div>
-                        <DropdownMenuItem asChild>
-                          <Link href="/components">All</Link>
-                        </DropdownMenuItem>
                         {link.submenu
                           .slice(0, Math.ceil(link.submenu.length / 2))
                           .map((sublink, index) => (
@@ -133,9 +127,6 @@ const Header = ({ session }: { session: Session | null }) => {
                               <Link href={sublink.url}>{sublink.name}</Link>
                             </DropdownMenuItem>
                           ))}
-                        <DropdownMenuItem asChild>
-                          <Link href="/components/favourits">Favourits</Link>
-                        </DropdownMenuItem>
                       </div>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -188,16 +179,6 @@ const Header = ({ session }: { session: Session | null }) => {
             )}
           </ul>
           <ul className="flex items-center max-lg:ml-auto  [&>*:not(:last-child)]:me-2.5">
-            <li className="">
-              <Button
-                size={"icon"}
-                variant={"icon"}
-                onClick={() => setSearchModalIsOpen(!searchModalIsOpen)}
-              >
-                <Icons.search />
-              </Button>
-            </li>
-
             {session ? (
               <>
                 <li className="max-lg:hidden">
@@ -293,7 +274,7 @@ const Header = ({ session }: { session: Session | null }) => {
                         }
                       >
                         <span
-                          className={`flex cursor-pointer items-center justify-between rounded-large px-5 py-2.5 font-sans text-lg font-medium leading-8 text-white transition-colors duration-500 hover:duration-500 dark:hover:bg-dark-200 lg:px-4  xl:px-5 ${
+                          className={`flex cursor-pointer items-center justify-between rounded-xl px-5 py-2.5 font-sans text-lg font-medium leading-8 text-white transition-colors duration-500 hover:duration-500 dark:hover:bg-dark-200 lg:px-4  xl:px-5 ${
                             pathname === link.url
                               ? "bg-dark-300"
                               : "hover:bg-dark-300"
@@ -305,12 +286,12 @@ const Header = ({ session }: { session: Session | null }) => {
                             className="stroke-white duration-500 group-[.open]:rotate-180"
                           />
                         </span>
-                        <ul className="flex max-h-0 w-full flex-col gap-1 overflow-hidden transition-all duration-700 group-[.open]:max-h-96">
+                        <ul className="flex max-h-0 w-full flex-col gap-1 overflow-hidden transition-all duration-700 group-[.open]:max-h-[700px] pl-5">
                           {link.submenu.map((item, index) => (
                             <li key={index} className="group relative">
                               <Link
                                 href={item.url}
-                                className={`flex  items-center rounded-large px-5 py-2.5 font-sans text-lg font-medium leading-8 text-white transition-colors duration-500 hover:duration-500 dark:hover:bg-dark-200 lg:px-4  xl:px-5 ${
+                                className={`flex  items-center rounded-xl px-5 py-2.5 font-sans text-lg font-medium leading-8 text-white transition-colors duration-500 hover:duration-500 dark:hover:bg-dark-200 lg:px-4  xl:px-5 ${
                                   pathname === item.url
                                     ? "bg-dark-300"
                                     : "hover:bg-dark-300"
@@ -326,7 +307,7 @@ const Header = ({ session }: { session: Session | null }) => {
                       <li key={index} className="group relative">
                         <Link
                           href={link.url}
-                          className={`flex  items-center rounded-large px-5 py-2.5 font-sans text-lg font-medium leading-8 text-white transition-colors duration-500 hover:duration-500 dark:hover:bg-dark-200 lg:px-4  xl:px-5 ${
+                          className={`flex  items-center rounded-xl px-5 py-2.5 font-sans text-lg font-medium leading-8 text-white transition-colors duration-500 hover:duration-500 dark:hover:bg-dark-200 lg:px-4  xl:px-5 ${
                             pathname === link.url
                               ? "bg-dark-300"
                               : "hover:bg-dark-300"
@@ -356,68 +337,6 @@ const Header = ({ session }: { session: Session | null }) => {
           </div>
         </nav>
       </header>
-
-      {/*SEARCH MODAL */}
-      <div
-        aria-hidden="false"
-        className={`fixed inset-0 top-0 z-[99999999990] items-start  justify-center
-        ${searchModalIsOpen ? "flex" : "hidden"}
-        `}
-        id="modal"
-        role="dialog"
-      >
-        <div
-          className=" absolute left-0 top-0 h-full w-full bg-dark-200/25"
-          onClick={() => setSearchModalIsOpen(false)}
-        ></div>
-        <div className="animate-keep-bounce relative h-auto w-full max-w-xl p-4">
-          <div className="relative rounded-lg bg-white p-2.5 shadow-box dark:bg-dark-200 ">
-            <div className=" rounded border border-dashed border-gray-100 p-10 dark:border-borderColour-dark max-lg:p-5 ">
-              <div className="bg flex items-center justify-between border-b border-dashed border-b-borderColour pb-5 dark:border-borderColour-dark">
-                <h3 className="text-paragraph dark:text-white">Search</h3>
-                <Button
-                  size={"icon"}
-                  variant={"icon"}
-                  onClick={() => setSearchModalIsOpen(false)}
-                >
-                  <Icons.X />
-                </Button>
-              </div>
-              <form className="mt-5">
-                <div>
-                  <div className="flex">
-                    <div className="relative w-full">
-                      <Input
-                        className=" rounded-md"
-                        placeholder="Search Components"
-                        type="text"
-                        defaultValue=""
-                      />
-                    </div>
-                  </div>
-                </div>
-              </form>
-              <p className="mb-12 hidden pt-5 font-medium">
-                <span>No recent searches</span>
-              </p>
-              <div className="pt-5">
-                <h3 className="mb-1">Search Results</h3>
-                <ul className="[&>*:not(:last-child)]:border-b [&>*:not(:last-child)]:border-dashed  [&>*:not(:last-child)]:border-gray-100  dark:[&>*:not(:last-child)]:border-borderColour-dark">
-                  <li className="group ">
-                    <Link
-                      className="flex items-center justify-between py-5 font-medium"
-                      href="/"
-                    >
-                      Tailwind Login Page
-                      <Icons.chevronRight />
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </>
   );
 };

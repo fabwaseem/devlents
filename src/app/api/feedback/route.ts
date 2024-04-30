@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
     }
 
     try {
-      const feedback = await db.feedback.create({
+       await db.feedback.create({
         data: {
           title,
           description,

@@ -3,17 +3,17 @@ import { db } from "@/server/db";
 
 interface Props {
   searchParams: {
-    componentId?: string;
+    fork?: string;
   };
 }
 
 const Page = async ({ searchParams }: Props) => {
-  const variationId = searchParams.componentId;
+  const componentSlug = searchParams.fork;
   let component = undefined;
-  if (variationId) {
+  if (componentSlug) {
     component = await db.component.findUnique({
       where: {
-        id: variationId,
+        slug: componentSlug,
       },
       include: {
         user: true,

@@ -1,35 +1,22 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { Allotment } from "allotment";
 import "allotment/dist/style.css";
 import Editor from "@monaco-editor/react";
 import { Icons } from "./Icons";
 import type monaco from "monaco-editor";
 import { useTheme } from "next-themes";
-import parse from "html-react-parser";
-import ReactShadowRoot from "react-shadow-root";
+import { Button } from "./ui/Button";
+import { CheckCircle, Copy } from "lucide-react";
 
 interface CodeEditorProps {
   code: {
-    html?: string;
-    css?: string;
+    html?: string | null;
+    css?: string | null;
   };
-  onChange: ({ language, value }: { language: string; value: string }) => void;
+  onChange?: ({ language, value }: { language: string; value: string }) => void;
 }
 
 const CodeEditor = ({ code, onChange }: CodeEditorProps) => {
-  const editorRef = useRef<monaco.editor.IStandaloneCodeEditor>();
-  const [currentTab, setCurrentTab] = useState(0);
-  const handleOnChange = ({
-    language,
-    value,
-  }: {
-    language: string;
-    value: string;
-  }) => {
-    onChange({ language, value });
-  };
-
   const tabs = [
     {
       value: "html",
@@ -41,88 +28,111 @@ const CodeEditor = ({ code, onChange }: CodeEditorProps) => {
       label: "CSS",
       icon: Icons.css,
     },
-    // {
-    //   value: "js",
-    //   label: "JS",
-    //   icon: Icons.css,
-    // },
   ];
 
   const files = [
     {
       name: "index.html",
       language: "html",
-      value: code.html,
+      value: code.html ?? "",
     },
     {
       name: "style.css",
       language: "css",
-      value: code.css,
+      value: code.css ?? "",
     },
-    // {
-    //   name: "script.js",
-    //   language: "javascript",
-    //   value: codeState.javascript,
-    // },
   ];
+  const editorRef = useRef<monaco.editor.IStandaloneCodeEditor>();
+  const [state, setState] = useState({
+    html: code.html ?? "",
+    css: code.css ?? "",
+  });
+  const [copied, setCopied] = useState(false);
 
-  const file = files[currentTab];
+  const [currentTab, setCurrentTab] = useState(0);
+  const [file, setFile] = useState<{
+    name: string;
+    language: string;
+    value: string;
+  } | null>(null);
+
+  const handleOnChange = ({
+    language,
+    value,
+  }: {
+    language: string;
+    value: string;
+  }) => {
+    setState((prev) => ({ ...prev, [language]: value }));
+    setCopied(false);
+    onChange && onChange({ language, value });
+  };
 
   useEffect(() => {
+    setFile(files[currentTab] ?? null);
+  }, [currentTab]);
+  useEffect(() => {
     editorRef.current?.focus();
+    setCopied(false);
   }, [file?.name]);
 
   const { theme } = useTheme();
 
-  return (
-    <div className="min-h-[500px] flex-1 overflow-hidden rounded-xl border dark:border-gray">
-      <Allotment>
-        <Allotment.Pane minSize={300}>
-          <div className="h-full">
-            <div className="bg-dark-500 flex items-center px-4 pt-2">
-              {tabs.map((item, index) => (
-                <button
-                  key={index}
-                  className={`flex w-full max-w-[170px] items-center gap-2 rounded-lg rounded-b-none  px-4 py-2 pl-3 font-sans text-base font-semibold transition-colors  ${currentTab === index ? "bg-dark-200 text-white" : "bg-gray hover:bg-gray-100 dark:bg-dark"}`}
-                  onClick={() => setCurrentTab(index)}
-                >
-                  <item.icon />
-                  {item.label}
-                </button>
-              ))}
-            </div>
+  const handleCopy = () => {
+    const code = state[file?.language as "html" | "css"];
+    navigator.clipboard.writeText(code);
+    setCopied(true);
+  };
 
-            <Editor
-              path={file?.name}
-              defaultLanguage={file?.language}
-              defaultValue={file?.value}
-              className="py-2"
-              theme={theme === "dark" ? "vs-dark" : "vs"}
-              onMount={(editor) => (editorRef.current = editor)}
-              onChange={(value) => {
-                file &&
-                  handleOnChange({
-                    language: file?.language,
-                    value: "" + value,
-                  });
-              }}
-              options={{
-                minimap: {
-                  enabled: false,
-                },
-              }}
-            />
-          </div>
-        </Allotment.Pane>
-        <Allotment.Pane minSize={300}>
-          <div className="relative z-[1] flex h-full w-full  items-center  justify-center bg-gray dark:bg-dark-200">
-            <ReactShadowRoot>
-              <style>{code.css}</style>
-              {parse(code.html + "")}
-            </ReactShadowRoot>
-          </div>
-        </Allotment.Pane>
-      </Allotment>
+  return (
+    <div className="h-full overflow-hidden">
+      <div className="bg-dark-500 flex items-center px-4 pt-2 ">
+        {tabs.map((item, index) => (
+          <button
+            key={index}
+            className={`flex w-full max-w-[170px] items-center gap-2 rounded-lg rounded-b-none  px-4 py-2 pl-3 font-sans text-base font-semibold transition-colors  ${currentTab === index ? "bg-dark-200 text-white" : "bg-gray hover:bg-gray-100 dark:bg-dark"}`}
+            onClick={() => setCurrentTab(index)}
+          >
+            <item.icon />
+            {item.label}
+          </button>
+        ))}
+      </div>
+
+      <div className="relative h-full w-full">
+        <Editor
+          path={file?.name}
+          defaultLanguage={file?.language}
+          defaultValue={file?.value}
+          className="py-2"
+          theme={theme === "dark" ? "vs-dark" : "vs"}
+          onMount={(editor) => (editorRef.current = editor)}
+          onChange={(value) => {
+            file &&
+              handleOnChange({
+                language: file?.language,
+                value: "" + value,
+              });
+          }}
+          options={{
+            minimap: {
+              enabled: false,
+            },
+          }}
+        />
+        {/* copy button if there is code*/}
+        {state[file?.language as "html" | "css"]?.length > 0 && (
+          <Button
+            variant={"outline"}
+            size={"sm"}
+            className="absolute right-5 top-5 capitalize"
+            onClick={handleCopy}
+          >
+            {copied ? <CheckCircle size={16} /> : <Copy size={16} />}
+            {copied ? "copied" : "copy"}
+          </Button>
+        )}
+      </div>
     </div>
   );
 };

@@ -17,12 +17,12 @@ import {
 import { Icons } from "./Icons";
 import { signIn } from "next-auth/react";
 import { toast } from "react-toastify";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+
 
 const LoginForm = () => {
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const router = useRouter();
   const formSchema = z.object({
     email: z.string().email({
       message: "Please enter a valid email address",
@@ -54,7 +54,8 @@ const LoginForm = () => {
     } else {
       toast.success("Login successfully");
       const from = searchParams.get("from") ?? "/";
-      router.push(from);
+      const url = new URL(from, process.env.NEXT_PUBLIC_APP_URL);
+      window.location.href = url.href;
     }
     setIsLoading(false);
   }

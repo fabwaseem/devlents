@@ -2,15 +2,18 @@
 
 import * as React from "react";
 import { useTheme } from "next-themes";
+import { Button } from "./ui/Button";
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
 
   return (
-    <div className="toggle-button fixed right-5 z-50 top-1/3">
-      <button
+    <div className="toggle-button fixed right-5 top-1/3 z-50">
+      <Button
         type="button"
-        className="text-paragraph border-paragraph/25 dark:border-borderColour-dark flex h-10 w-10 items-center justify-center rounded-md border focus:outline-none focus:ring-0 focus:ring-gray-200 dark:text-white"
+        variant={"icon"}
+        size={"icon"}
+        className="border"
         onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
       >
         {theme === "dark" ? (
@@ -36,7 +39,7 @@ export function ThemeToggle() {
             ></path>
           </svg>
         )}
-      </button>
+      </Button>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, {  useState } from "react";
 import SocialLogin from "./SocialLogin";
 import Link from "next/link";
 import { Input } from "./ui/Input";
@@ -27,6 +27,11 @@ const SignupForm = () => {
       name: z.string().min(2, {
         message: "Name must be at least 2 characters long",
       }),
+      username: z.string().min(2, {
+        message: "Username must be at least 2 characters long",
+      }).max(20, {
+        message: "Username must be at most 20 characters long",
+      }),
       email: z.string().email({
         message: "Please enter a valid email address",
       }),
@@ -50,6 +55,7 @@ const SignupForm = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
+      username: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -69,6 +75,7 @@ const SignupForm = () => {
     // register user send post request to /api/auth/register
     const data = {
       name: values.name,
+      username: values.username,
       email: values.email,
       password: values.password,
     };
@@ -114,6 +121,24 @@ const SignupForm = () => {
                         id="name"
                         placeholder="Enter your name"
                         label="Your Name"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        id="username"
+                        placeholder="Enter your username"
+                        label="Username"
                         {...field}
                       />
                     </FormControl>
@@ -197,7 +222,7 @@ const SignupForm = () => {
                         By signing up you agree to the{" "}
                         <Link
                           href="terms-conditions"
-                          className="link-btn text-right inline-block"
+                          className="link-btn inline-block text-right"
                         >
                           Terms & Conditions
                         </Link>

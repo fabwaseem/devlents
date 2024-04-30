@@ -44,7 +44,7 @@ const Footer = () => {
           <div className="col-span-12 max-lg:text-center sm:col-span-4 lg:col-span-2">
             <h3 className="mb-8 text-lg font-medium">Components</h3>
             <ul className="[&>*:not(:last-child)]:mb-3">
-              {footerLinks?.Components.map((link, index) => (
+              {footerLinks?.Components.splice(0, 4).map((link, index) => (
                 <li key={index}>
                   <Link href={link.url} className="link-btn">
                     {link.name}

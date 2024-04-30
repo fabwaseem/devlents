@@ -5,11 +5,7 @@ const page = () => {
   return (
     <section className="relative mb-[150px] pt-[120px] max-md:mb-[100px]  ">
       <div
-        className="aos-init aos-animate container relative"
-        data-aos="fade-up"
-        data-aos-offset={200}
-        data-aos-duration={1000}
-        data-aos-once="true"
+        className=" container relative"
       >
         <div className="mx-auto mb-12 max-w-[475px] text-center">
           <h2>

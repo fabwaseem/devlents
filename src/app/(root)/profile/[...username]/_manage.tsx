@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { Button } from "@/components/ui/Button";
 import { Icons } from "@/components/Icons";
 import { Modal } from "react-responsive-modal";
@@ -18,9 +18,11 @@ import {
 import { toast } from "react-toastify";
 import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
-import type { Session } from "next-auth";
+import { User } from "@prisma/client";
 
-const ManageProfile = ({session}:{session: Session}) => {
+const ManageProfile = ({ user }: { user: User }) => {
+  const {data:session, update } = useSession();
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const formSchema = z.object({
@@ -36,11 +38,11 @@ const ManageProfile = ({session}:{session: Session}) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: session?.user?.name ?? "",
-      website: session?.user?.website ?? "",
-      location: session?.user?.location ?? "",
-      company: session?.user?.company ?? "",
-      bio: session?.user?.bio ?? "",
+      name: user?.name ?? "",
+      website: user?.website ?? "",
+      location: user?.location ?? "",
+      company: user?.company ?? "",
+      bio: user?.bio ?? "",
     },
   });
 
@@ -61,6 +63,11 @@ const ManageProfile = ({session}:{session: Session}) => {
     const resData = (await response.json()) as ResponseData;
 
     if (response.status === 201) {
+      update({
+        user: {
+          name: values.name,
+        },
+      });
       toast.success(resData.msg);
       setOpen(false);
     } else {
@@ -68,7 +75,7 @@ const ManageProfile = ({session}:{session: Session}) => {
     }
     setIsLoading(false);
   }
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   const onOpenModal = () => setOpen(true);
   const onCloseModal = () => setOpen(false);
@@ -202,7 +209,7 @@ const ManageProfile = ({session}:{session: Session}) => {
                 <Button type="button" variant="outline" onClick={onCloseModal}>
                   Cancel
                 </Button>
-                <Button type="submit">
+                <Button type="submit" disabled={isLoading}>
                   {isLoading && (
                     <Icons.spinner className="h-6 w-6 animate-spin stroke-white transition-colors duration-500" />
                   )}
