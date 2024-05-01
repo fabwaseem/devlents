@@ -58,7 +58,6 @@ export default async function RootLayout({
               disableTransitionOnChange
             >
               <NextTopLoader color="#6139ff" />
-
               {children}
             </ThemeProvider>
           </ReduxProvider>

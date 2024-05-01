@@ -39,7 +39,7 @@ const Pagination = ({ totalPages }: { totalPages: number }) => {
     <div className="mt-5 grid grid-cols-2 gap-3">
       {page > 1 && page <= totalPages && (
         <button
-          className="rounded-lg flex items-center justify-start gap-5 bg-dark p-5 text-lg font-semibold"
+          className="flex items-center justify-start gap-5 rounded-lg bg-gray/50 p-5 text-lg font-semibold dark:bg-dark"
           onClick={handlePreviousPage}
         >
           <svg
@@ -59,7 +59,7 @@ const Pagination = ({ totalPages }: { totalPages: number }) => {
       )}
       {page < totalPages && (
         <button
-          className=" col-start-2 flex items-center justify-end gap-5 rounded-lg bg-dark p-5 text-end text-lg font-semibold"
+          className=" col-start-2 flex items-center justify-end gap-5 rounded-lg bg-gray/50 p-5 text-end text-lg font-semibold dark:bg-dark"
           onClick={handleNextPage}
         >
           Next page

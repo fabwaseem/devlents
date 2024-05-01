@@ -181,7 +181,7 @@ const page = async () => {
               <div className="h-[330px] w-[330px] rounded-full bg-primary-200/25 blur-[145px] lg:-ml-[170px] xl:h-[442px] xl:w-[442px]" />
               <div className="lg-ml-[170px] h-[330px] w-[330px] rounded-full bg-primary-200/20 blur-[145px] xl:h-[442px] xl:w-[442px]" />
             </div>
-            <div className="grid grid-cols-3  gap-8 max-lg:grid-cols-2 max-sm:grid-cols-1">
+            <div className="grid grid-cols-3 items-stretch  gap-8 max-lg:grid-cols-2 max-sm:grid-cols-1">
               {latestComponents.map((item, index) => (
                 <ComponentCard key={index} component={item} session={session} />
               ))}
@@ -284,7 +284,7 @@ const page = async () => {
               <div className="h-[330px] w-[330px] rounded-full bg-primary-200/25 blur-[145px] lg:-ml-[170px] xl:h-[442px] xl:w-[442px]" />
               <div className="lg-ml-[170px] h-[330px] w-[330px] rounded-full bg-primary-200/20 blur-[145px] xl:h-[442px] xl:w-[442px]" />
             </div>
-            <div className="grid grid-cols-3  gap-8 max-lg:grid-cols-2 max-sm:grid-cols-1">
+            <div className="grid grid-cols-3 items-stretch  gap-8 max-lg:grid-cols-2 max-sm:grid-cols-1">
               {components.map((item, index) => (
                 <ComponentCard key={index} component={item} session={session} />
               ))}

@@ -7,6 +7,7 @@ import { formatNumber } from "@/lib/utils";
 import { CodeIcon, Eye, ThumbsUp } from "lucide-react";
 import { ComponentData } from "@/types";
 import { Session } from "next-auth";
+import { usePathname } from "next/navigation";
 
 const ComponentCard = ({
   component,
@@ -14,16 +15,16 @@ const ComponentCard = ({
 }: {
   component: ComponentData;
   session: Session | null;
-  }) => {
-
+}) => {
+  const pathname = usePathname();
   const isOwner = session?.user?.id === component.user.id;
   const isFavourite = component.favourites.length > 0;
   const isUpvoted = component.upvotes.length > 0;
 
   return (
-    <div>
-      <div className="group relative overflow-hidden rounded-xl bg-gray-50 dark:bg-dark-200">
-        <div className="relative z-[1] flex h-[300px] w-full  animate-fade-in items-center  justify-center bg-gray shadow-nav dark:bg-dark-200">
+    <div className="flex flex-col">
+      <div className="group relative max-h-[500px] min-h-[300px] grow overflow-hidden rounded-xl bg-gray-50 dark:bg-dark-200">
+        <div className="relative z-[1] flex h-full w-full  animate-fade-in items-center  justify-center bg-gray py-20 shadow-nav dark:bg-dark-200">
           <ReactShadowRoot>
             <style>{component.css}</style>
             {parse(component.html + "")}
@@ -39,13 +40,17 @@ const ComponentCard = ({
       </div>
 
       <div className="mt-1 flex h-[28px] items-center justify-between gap-5 px-2">
-        <Link
-          href={`/profile/${component.user.username}`}
-          className="overflow-hidden overflow-ellipsis whitespace-nowrap"
-        >
-          {component.user.username}
-        </Link>
-        <div className="flex items-center gap-3 whitespace-nowrap text-gray-500">
+        {pathname.includes("/profile") ? (
+          ""
+        ) : (
+          <Link
+            href={`/profile/${component.user.username}`}
+            className="overflow-hidden overflow-ellipsis whitespace-nowrap text-sm font-semibold "
+          >
+            {component.user.username}
+          </Link>
+        )}
+        <div className="flex items-center gap-3 whitespace-nowrap text-gray-500 ml-auto">
           <span className="flex items-center gap-2">
             {formatNumber(component.views)} <Eye size={16} />
           </span>

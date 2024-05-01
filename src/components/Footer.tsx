@@ -2,6 +2,7 @@ import { contactDetails, footerLinks, socialLinks } from "@/lib/config";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { Logos } from "./Logos";
 
 const Footer = () => {
   return (
@@ -9,21 +10,10 @@ const Footer = () => {
       <div className="container">
         <div className="mb-20 grid grid-cols-12 max-lg:gap-y-10 max-lg:text-center">
           <div className="col-span-12 lg:col-span-6">
-            <Image
-              src="/images/logo.svg"
-              alt="logo"
-              className="mb-10 inline-block dark:hidden"
-              width={70}
-              height={70}
-            />
-            <Image
-              src="/images/logo.svg"
-              alt="logo dark version"
-              className="mb-10 hidden  dark:inline-block"
-              width={70}
-              height={70}
-            />
-            <p className="max-w-[350px] max-lg:mx-auto">
+            <div className=" w-max max-lg:mx-auto">
+              <Logos.devlents />
+            </div>
+            <p className="max-w-[350px] max-lg:mx-auto mt-5">
               Devlent is a simple and easy way to explore and share web
               components, making it easier for developers to build their next
               dream project.

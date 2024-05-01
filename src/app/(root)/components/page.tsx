@@ -11,6 +11,7 @@ import { includeComponent } from "@/lib/prisma/includeComponent";
 import { getServerAuthSession } from "@/server/auth";
 import SearchForm from "../SearchForm";
 import { componentFilters } from "@/lib/prisma/componentFilters";
+import { componentsPerPage } from "@/lib/config";
 
 
 interface Props {
@@ -22,7 +23,6 @@ interface Props {
   };
 }
 const page = async ({ searchParams }: Props) => {
-  const perPage = 15;
   const page = searchParams.page ?? 1;
   if (page < 1) {
     return notFound();
@@ -30,10 +30,16 @@ const page = async ({ searchParams }: Props) => {
   const session = await getServerAuthSession();
 
   const [count, components] = await db.$transaction([
-    db.component.count(),
+    db.component.count({
+      ...componentFilters({
+        searchParams,
+        type: "components",
+        status: "PUBLISHED",
+      }),
+    }),
     db.component.findMany({
-      take: perPage,
-      skip: perPage * (page - 1),
+      take: componentsPerPage,
+      skip: componentsPerPage * (page - 1),
       ...componentFilters({
         searchParams,
         type: "components",
@@ -43,7 +49,7 @@ const page = async ({ searchParams }: Props) => {
     }),
   ]);
 
-  const totalPages = Math.ceil(count / perPage);
+  const totalPages = Math.ceil(count / componentsPerPage);
 
   return (
     <section className="relative  mb-[150px] min-h-screen pt-[150px] max-md:mb-[100px]">
@@ -56,7 +62,7 @@ const page = async ({ searchParams }: Props) => {
         </div>
         {components.length ? (
           <>
-            <div className=" mt-5 grid grid-cols-3  gap-8 max-lg:grid-cols-2 max-sm:grid-cols-1">
+            <div className=" mt-5 grid grid-cols-3 items-stretch  gap-8 max-lg:grid-cols-2 max-sm:grid-cols-1">
               {components.map((item, index) => (
                 <ComponentCard key={index} component={item} session={session} />
               ))}
@@ -65,7 +71,7 @@ const page = async ({ searchParams }: Props) => {
           </>
         ) : (
           <article className="mt-[10px] overflow-hidden rounded-xl border-2 border-solid border-gray-700">
-            <div className="flex h-full flex-col items-center justify-center px-24 py-12 text-center">
+            <div className="flex h-full flex-col items-center justify-center px-8 py-12 text-center">
               <p className="mb-6 text-gray-400">
                 Nothing here, try to tweak your filters or adjust the search
                 query or create one now.

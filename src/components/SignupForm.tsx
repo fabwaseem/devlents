@@ -1,5 +1,5 @@
 "use client";
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import SocialLogin from "./SocialLogin";
 import Link from "next/link";
 import { Input } from "./ui/Input";
@@ -27,11 +27,14 @@ const SignupForm = () => {
       name: z.string().min(2, {
         message: "Name must be at least 2 characters long",
       }),
-      username: z.string().min(2, {
-        message: "Username must be at least 2 characters long",
-      }).max(20, {
-        message: "Username must be at most 20 characters long",
-      }),
+      username: z
+        .string()
+        .min(2, {
+          message: "Username must be at least 2 characters long",
+        })
+        .max(20, {
+          message: "Username must be at most 20 characters long",
+        }),
       email: z.string().email({
         message: "Please enter a valid email address",
       }),
@@ -112,42 +115,6 @@ const SignupForm = () => {
             <div className="space-y-6 ">
               <FormField
                 control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input
-                        type="text"
-                        id="name"
-                        placeholder="Enter your name"
-                        label="Your Name"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="username"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input
-                        type="text"
-                        id="username"
-                        placeholder="Enter your username"
-                        label="Username"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
@@ -165,6 +132,44 @@ const SignupForm = () => {
                   </FormItem>
                 )}
               />
+              <div className="flex flex-col gap-6 md:flex-row md:gap-2">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          type="text"
+                          id="name"
+                          placeholder="Enter your name"
+                          label="Your Name"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="username"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          type="text"
+                          id="username"
+                          placeholder="Enter your username"
+                          label="Username"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
               <div className="flex flex-col gap-6 md:flex-row md:gap-2">
                 <FormField
                   control={form.control}
@@ -216,17 +221,21 @@ const SignupForm = () => {
                         <Checkbox
                           checked={field.value}
                           onCheckedChange={field.onChange}
+                          id="accpetTerms"
                         />
                       </FormControl>
-                      <div className=" text-sm leading-none">
-                        By signing up you agree to the{" "}
+                      <label
+                        className=" text-sm leading-none"
+                        htmlFor="accpetTerms"
+                      >
+                        I agree with the{" "}
                         <Link
                           href="terms-conditions"
-                          className="link-btn inline-block text-right"
+                          className="link-btn !leading-none"
                         >
                           Terms & Conditions
                         </Link>
-                      </div>
+                      </label>
                     </FormItem>
                   )}
                 />

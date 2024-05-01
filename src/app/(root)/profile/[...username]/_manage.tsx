@@ -18,10 +18,10 @@ import {
 import { toast } from "react-toastify";
 import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
-import { User } from "@prisma/client";
+import { type User } from "@prisma/client";
 
 const ManageProfile = ({ user }: { user: User }) => {
-  const {data:session, update } = useSession();
+  const { data: session, update } = useSession();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -32,7 +32,9 @@ const ManageProfile = ({ user }: { user: User }) => {
     website: z.union([z.literal(""), z.string().trim().url()]),
     location: z.string(),
     company: z.string(),
-    bio: z.string(),
+    bio: z.string().max(160, {
+      message: "Bio cannot be longer than 160 characters",
+    }),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -63,13 +65,14 @@ const ManageProfile = ({ user }: { user: User }) => {
     const resData = (await response.json()) as ResponseData;
 
     if (response.status === 201) {
-      update({
+      await update({
         user: {
           name: values.name,
         },
       });
       toast.success(resData.msg);
       setOpen(false);
+      window.location.reload();
     } else {
       toast.error(resData.msg);
     }
@@ -81,14 +84,40 @@ const ManageProfile = ({ user }: { user: User }) => {
   const onCloseModal = () => setOpen(false);
 
   return (
-    <div className=" flex flex-wrap gap-1 text-sm">
-      <Button variant={"ghost"} size={"sm"} onClick={onOpenModal}>
+    <div className="flex gap-1 text-sm">
+      <Button
+        variant={"ghost"}
+        size={"sm"}
+        className="hidden lg:flex"
+        onClick={onOpenModal}
+      >
         <Icons.settings size={16} />
         Edit profile
       </Button>
-      <Button variant={"ghost"} size={"sm"} onClick={() => signOut()}>
+      <Button
+        variant={"ghost"}
+        size={"sm"}
+        className="hidden lg:flex"
+        onClick={() => signOut()}
+      >
         <Icons.logOut size={16} />
         Logout
+      </Button>
+      <Button
+        variant={"ghost"}
+        size={"icon"}
+        className=" lg:hidden"
+        onClick={onOpenModal}
+      >
+        <Icons.settings size={16} />
+      </Button>
+      <Button
+        variant={"ghost"}
+        size={"icon"}
+        className=" lg:hidden"
+        onClick={() => signOut()}
+      >
+        <Icons.logOut size={16} />
       </Button>
       <Modal
         open={open}

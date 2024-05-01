@@ -8,28 +8,28 @@ import { Modal } from "react-responsive-modal";
 import "react-responsive-modal/styles.css";
 import { TagsInput } from "@/components/ui/TagsInput";
 import { Select } from "@/components/ui/Select";
-import { componentCategories } from "@/lib/config";
+import { componentCategories, tailwindCdn } from "@/lib/config";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import type { Component, User } from "@prisma/client";
 import useDebounce from "@/app/hook/useDebounce";
-import { type Session } from "next-auth";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import ReactShadowRoot from "react-shadow-root";
 import parse from "html-react-parser";
 import { Allotment } from "allotment";
+import { Delete } from "lucide-react";
+import { Logos } from "./Logos";
 type Props = Component & {
   user: User;
 };
 
-const CreateForm = ({
-  component,
-}: {
-  component?: Props;
-}) => {
+const CreateForm = ({ component }: { component?: Props }) => {
+  const [isOpenTypeSelectModal, setIsOpenTypeSelectModal] = useState(true);
+  const [selectedType, setSelectedType] = useState("css");
+
   const [debouncedCode, code, setCode] = useDebounce(
     {
       html: component?.html ?? "",
@@ -37,6 +37,7 @@ const CreateForm = ({
     },
     1000,
   );
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const formSchema = z
     .object({
@@ -161,6 +162,13 @@ const CreateForm = ({
     }
   }, [code, component]);
 
+  const handleClearCode = () => {
+    setCode({
+      html: "",
+      css: "",
+    });
+  };
+
   return (
     <>
       <div className="container flex h-full flex-col pb-4">
@@ -171,10 +179,37 @@ const CreateForm = ({
             </Allotment.Pane>
             <Allotment.Pane minSize={300}>
               <div className="relative z-[1] flex h-full w-full  items-center  justify-center bg-gray dark:bg-dark-200">
-                <ReactShadowRoot>
-                  <style>{debouncedCode.css}</style>
-                  {parse(debouncedCode.html + "")}
-                </ReactShadowRoot>
+                {selectedType === "css" ? (
+                  <div>
+                    <ReactShadowRoot>
+                      <style>{debouncedCode.css}</style>
+                      {parse(debouncedCode.html + "")}
+                    </ReactShadowRoot>
+                  </div>
+                ) : (
+                  <iframe
+                    srcDoc={`
+                  <html style="height:100%">
+                    <head>
+                  <script>
+                  window.onload = function() {
+                      var head = document.querySelector('head');
+                      var styleTag = document.querySelector('head style');
+                      window.parent.postMessage(styleTag.innerHTML, "http://localhost:3000");
+                  };
+                  </script>
+                       ${tailwindCdn}
+                      </head>
+                      <body style="display:flex;align-items:center;justify-content:center;height:100%;">
+                        ${debouncedCode.html}
+                      </body>
+                    `}
+                    width={"100%"}
+                    height={"100%"}
+                    className="border-none"
+                    sandbox="allow-scripts"
+                  ></iframe>
+                )}
               </div>
             </Allotment.Pane>
           </Allotment>
@@ -184,8 +219,13 @@ const CreateForm = ({
           <div className="flex h-full min-h-[40px]  items-stretch justify-between gap-2">
             <div className="left flex items-center gap-2">
               <div className="h-full w-[2px] bg-dark" />
-              <Button variant={"icon"} size={"icon"}>
-                <Icons.eye size={16} />
+              <Button
+                variant={"icon"}
+                size={"icon"}
+                onClick={handleClearCode}
+                disabled={isLoading}
+              >
+                <Delete size={16} />
               </Button>
             </div>
             <div className="flex items-stretch gap-2">
@@ -303,6 +343,52 @@ const CreateForm = ({
           </div>
         </div>
       </Modal>
+      {/* <Modal
+        open={isOpenTypeSelectModal}
+        onClose={() => setIsOpenTypeSelectModal(false)}
+        center
+        classNames={{
+          root: "!z-[9999999999999]",
+          modal:
+            "max-w-[1200px] !m-0 w-full dark:!bg-dark-300 dark:!text-white !rounded-xl",
+          closeIcon: "dark:!fill-white",
+        }}
+      >
+        <div className="pt-10">
+          <h3 className=" mb-8 text-4xl font-extrabold ">
+            What do you want to use?
+          </h3>
+
+          <div className=" grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-5">
+            <button
+              className={`flex h-[150px] flex-col items-center  justify-center gap-3  rounded-lg border-2  bg-gray-50  p-5 text-center font-semibold transition-colors  dark:border-dark-200 dark:bg-dark  ${selectedType === "css" ? "border-primary dark:border-primary" : "hover:border-gray-400 dark:hover:border-gray-600"}`}
+              onClick={() => setSelectedType("css")}
+            >
+              <Logos.css />
+              CSS
+            </button>
+            <button
+              className={`flex h-[150px] flex-col items-center  justify-center gap-3  rounded-lg border-2  bg-gray-50  p-5 text-center font-semibold transition-colors  dark:border-dark-200 dark:bg-dark  ${selectedType === "tailwindcss" ? "border-primary dark:border-primary" : "hover:border-gray-400 dark:hover:border-gray-600"}`}
+              onClick={() => setSelectedType("tailwindcss")}
+            >
+              <Logos.tailwind />
+              Tailwind CSS
+            </button>
+            <div className=" flex h-[150px] flex-col items-center justify-center  gap-3 rounded-lg  border-2 bg-gray-50  p-5  text-center font-semibold transition-colors  dark:border-dark-200 dark:bg-dark ">
+              More Coming Soon!
+            </div>
+          </div>
+          <div className="mt-5">
+            <Button
+              onClick={() => setIsOpenTypeSelectModal(false)}
+              className="ml-auto"
+              disabled={isLoading}
+            >
+              Continue
+            </Button>
+          </div>
+        </div>
+      </Modal> */}
     </>
   );
 };

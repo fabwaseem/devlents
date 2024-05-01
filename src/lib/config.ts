@@ -234,3 +234,8 @@ export const componentTypes = [
     value: "tailwindcss",
   },
 ];
+
+export const componentsPerPage = 9;
+
+export const tailwindCdn =
+  "<script src='https://cdn.tailwindcss.com/'></script>";

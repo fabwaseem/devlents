@@ -56,7 +56,9 @@ const Feedback = () => {
     title: z.string().min(1, {
       message: "Please write a short title",
     }),
-    description: z.string(),
+    description: z.string().max(500, {
+      message: "Please write a description less than 500 characters",
+    }),
     type: z.array(z.string()),
   });
 
@@ -168,7 +170,7 @@ const Feedback = () => {
                             return (
                               <FormItem
                                 key={item.id}
-                                className="flex flex-row items-center space-x-3 space-y-0"
+                                className="flex flex-row items-center space-x-3 space-y-0 w-max"
                               >
                                 <FormControl>
                                   <div>
@@ -216,11 +218,11 @@ const Feedback = () => {
             <DrawerFooter>
               <div className="flex  gap-3">
                 <DrawerClose asChild>
-                  <Button type="button" variant="outline" className="flex-1">
+                  <Button type="button" variant="outline" className="flex-1" size={"sm"}>
                     Cancel
                   </Button>
                 </DrawerClose>
-                <Button type="submit" className="flex-1">
+                <Button type="submit" className="flex-1" size={"sm"}>
                   {isLoading && (
                     <Icons.spinner className="h-6 w-6 animate-spin stroke-white transition-colors duration-500" />
                   )}{" "}

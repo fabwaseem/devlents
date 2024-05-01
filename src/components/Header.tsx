@@ -6,7 +6,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { Button } from "./ui/Button";
 import { Icons } from "./Icons";
 import { usePathname } from "next/navigation";
-import { Input } from "./ui/Input";
 import { type Session } from "next-auth";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/Avatar";
 import { getInitials } from "@/lib/utils";
@@ -17,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { signOut } from "next-auth/react";
+import { Logos } from "./Logos";
 
 const Header = ({ session }: { session: Session | null }) => {
   const pathname = usePathname();
@@ -69,18 +69,7 @@ const Header = ({ session }: { session: Session | null }) => {
         <nav className="container flex  items-center ">
           <div className={` ${isHome ? "xl:min-w-[266px]" : ""} `}>
             <Link href="/" className=" relative h-8 w-8 md:h-12 md:w-12">
-              <Image
-                src="/images/logo.svg"
-                alt="logo"
-                className="dark:hidden"
-                fill
-              />
-              <Image
-                src="/images/logo.svg"
-                alt="logo"
-                className="hidden dark:inline-block"
-                fill
-              />
+              <Logos.devlents/>
             </Link>
           </div>
           <ul
@@ -286,7 +275,7 @@ const Header = ({ session }: { session: Session | null }) => {
                             className="stroke-white duration-500 group-[.open]:rotate-180"
                           />
                         </span>
-                        <ul className="flex max-h-0 w-full flex-col gap-1 overflow-hidden transition-all duration-700 group-[.open]:max-h-[700px] pl-5">
+                        <ul className="flex max-h-0 w-full flex-col gap-1 overflow-hidden pl-5 transition-all duration-700 group-[.open]:max-h-[700px]">
                           {link.submenu.map((item, index) => (
                             <li key={index} className="group relative">
                               <Link

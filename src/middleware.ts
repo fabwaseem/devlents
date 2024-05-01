@@ -1,33 +1,57 @@
 import { getToken } from "next-auth/jwt";
 import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
+import {
+  DEFAULT_LOGIN_REDIRECT,
+  adminRoutesPrefix,
+  allowedOrigins,
+  apiAuthPrefix,
+  authRoutes,
+  publicRoutes,
+} from "routes";
 
 export default withAuth(
   async function middleware(req) {
+    const { pathname } = req.nextUrl;
+
     const token = await getToken({
       req,
     });
     const isAuth = !!token;
-    const isAuthPage =
-      req.nextUrl.pathname.startsWith("/login") ||
-      req.nextUrl.pathname.startsWith("/signup");
 
-    if (isAuthPage) {
-      if (isAuth) {
-        return NextResponse.redirect(new URL("/", req.url));
+    const isApiAuthRoute = pathname.startsWith(apiAuthPrefix);
+    const isPublicRoute = publicRoutes.includes(pathname);
+    const isAuthPage = authRoutes.some((route) => pathname.startsWith(route));
+    const isAdminPage = pathname.startsWith(adminRoutesPrefix);
+    const isAdmin = isAuth && token.role === "ADMIN";
+
+    if (isApiAuthRoute) {
+      return null;
+    }
+
+    if (isAdminPage) {
+      if (!isAdmin) {
+        return NextResponse.redirect(
+          new URL(DEFAULT_LOGIN_REDIRECT, req.nextUrl),
+        );
       }
       return null;
     }
 
-    if (!isAuth) {
-      let from = req.nextUrl.pathname;
-      if (req.nextUrl.search) {
-        from += req.nextUrl.search;
+    if (isAuthPage) {
+      if (isAuth) {
+        return NextResponse.redirect(
+          new URL(DEFAULT_LOGIN_REDIRECT, req.nextUrl),
+        );
       }
-      return NextResponse.redirect(
-        new URL(`/login?from=${encodeURIComponent(from)}`, req.url),
-      );
+      return null;
     }
+
+    if (isPublicRoute) {
+      return null;
+    }
+
+    return null;
   },
   {
     callbacks: {
@@ -42,5 +66,5 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ["/login", "/signup", "/create"],
+  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
 };

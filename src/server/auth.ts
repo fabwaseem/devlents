@@ -9,6 +9,7 @@ import { faker } from "@faker-js/faker";
 
 import { env } from "@/env";
 import { db } from "@/server/db";
+import { Role } from "@prisma/client";
 
 /**
  * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
@@ -123,6 +124,7 @@ export const authOptions: NextAuthOptions = {
         session.user.name = token.name;
         session.user.username = token.username;
         session.user.email = token.email;
+        session.user.role = token.role as Role;
         session.user.image = token.picture;
       }
 
@@ -147,6 +149,7 @@ export const authOptions: NextAuthOptions = {
         name: dbUser.name,
         username: dbUser.username ?? "",
         email: dbUser.email,
+        role: dbUser.role,
         picture: dbUser.image,
       };
     },

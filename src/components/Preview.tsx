@@ -212,7 +212,7 @@ const Preview = ({
         <div className="mt-4 rounded-xl bg-gray p-2  dark:bg-dark">
           <div className="flex h-full min-h-[40px] flex-wrap items-stretch justify-between gap-2 ">
             <div className=" flex items-center gap-2">
-              <div className="ml-1 mr-5 h-full w-0.5 bg-gray-500/70" />
+              <div className="ml-1 mr-2 h-full w-0.5 bg-gray-500/70" />
               <div className="mr-5 flex items-center gap-3 ">
                 <Eye size={16} />
                 {formatNumber(component?.views ?? 0)}
@@ -269,7 +269,7 @@ const Preview = ({
                   onClick={handleFavourite}
                 >
                   <Heart size={16} />{" "}
-                  {state.favorited ? "Added to Favorited" : "Save to Favorites"}
+                  {state.favorited ? "Added to Favorites" : "Save to Favorites"}
                 </Button>
                 <Button
                   size={"icon"}

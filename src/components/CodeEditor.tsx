@@ -78,9 +78,13 @@ const CodeEditor = ({ code, onChange }: CodeEditorProps) => {
 
   const { theme } = useTheme();
 
-  const handleCopy = () => {
+  const handleCopy = async () => {
     const code = state[file?.language as "html" | "css"];
-    navigator.clipboard.writeText(code);
+    if ("clipboard" in navigator) {
+      await navigator.clipboard.writeText(code);
+    } else {
+      document.execCommand("copy", true, code);
+    }
     setCopied(true);
   };
 
