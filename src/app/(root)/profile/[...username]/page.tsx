@@ -86,6 +86,7 @@ const page = async ({ params, searchParams }: Props) => {
         type: "profile",
         status: compStatus as ComponentStatus,
         userId: user.id,
+        session,
       }),
     }),
     db.component.findMany({
@@ -96,6 +97,7 @@ const page = async ({ params, searchParams }: Props) => {
         type: "profile",
         status: compStatus as ComponentStatus,
         userId: user.id,
+        session,
       }),
       include: includeComponent(session?.user.id),
     }),

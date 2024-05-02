@@ -1,4 +1,4 @@
-export const includeComponent = (userId: string | undefined) => {
+export const includeComponent = (userId?: string | undefined) => {
   return {
     user: {
       select: {

@@ -9,6 +9,7 @@ import {
   authRoutes,
   publicRoutes,
 } from "routes";
+import { adminRoles } from "./lib/admin-config";
 
 export default withAuth(
   async function middleware(req) {
@@ -23,7 +24,7 @@ export default withAuth(
     const isPublicRoute = publicRoutes.includes(pathname);
     const isAuthPage = authRoutes.some((route) => pathname.startsWith(route));
     const isAdminPage = pathname.startsWith(adminRoutesPrefix);
-    const isAdmin = isAuth && token.role === "ADMIN";
+    const isAdmin = isAuth && adminRoles.includes(token.role);
 
     if (isApiAuthRoute) {
       return null;

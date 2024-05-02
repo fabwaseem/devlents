@@ -100,10 +100,12 @@ export const authOptions: NextAuthOptions = {
   events: {
     async linkAccount({ user }) {
       const username = user.name
-        ? faker.internet.userName({
-            firstName: user.name.split(" ")[0],
-            lastName: user.name.split(" ")[1],
-          }).toLowerCase()
+        ? faker.internet
+            .userName({
+              firstName: user.name.split(" ")[0],
+              lastName: user.name.split(" ")[1],
+            })
+            .toLowerCase()
         : "";
 
       await db.user.update({
@@ -162,3 +164,8 @@ export const authOptions: NextAuthOptions = {
  * @see https://next-auth.js.org/configuration/nextjs
  */
 export const getServerAuthSession = () => getServerSession(authOptions);
+
+export const getServerUser = async () => {
+  const session = await getServerAuthSession();
+  return session?.user;
+};

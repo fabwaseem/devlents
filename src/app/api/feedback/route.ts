@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
         data: {
           title,
           description,
-          type: type.join(","),
+          types: "MISC",
           userId: session.user.id,
         },
       });

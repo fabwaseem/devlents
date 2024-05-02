@@ -5,14 +5,14 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "text-base font-sans font-medium leading-6 -tracking-[0.3px] text-white  dark:text-white  relative z-0 before:-z-10  before:absolute before:bottom-0 before:left-0 before:h-full before:w-full before:origin-right before:scale-x-0 before:bg-borderColour-dark dark:before:bg-primary-200 before:transition-transform before:duration-500 before:hover:origin-left before:hover:scale-x-100 disabled:before:hover:scale-x-0 overflow-hidden flex items-center  justify-center disabled:opacity-70 disabled:cursor-not-allowed overflow-hidden overflow-ellipsis whitespace-nowrap",
+  "text-base font-sans font-medium leading-6 -tracking-[0.3px] text-white  dark:text-white  relative z-0 before:-z-10  before:absolute before:bottom-0 before:left-0 before:h-full before:w-full before:origin-right before:scale-x-0 before:bg-borderColour-dark dark:before:bg-primary-200 before:transition-transform before:duration-500 before:hover:origin-left before:hover:scale-x-100 disabled:before:hover:scale-x-0  flex items-center  justify-center disabled:opacity-70 disabled:cursor-not-allowed overflow-hidden overflow-ellipsis whitespace-nowrap",
   {
     variants: {
       variant: {
         default:
           "after:absolute after:w-full after:h-full  after:bg-paragraph after:dark:bg-primary after:left-0 after:top-0 after:-z-20 ",
         outline:
-          "duration-500 transition-all hover:transition-all  bg-white text-paragraph border-borderColour dark:bg-transparent border dark:border-[#313330]  z-10 before:bg-paragraph dark:before:bg-primary hover:text-white disabled:hover:text-paragraph",
+          "duration-500 transition-all hover:transition-all  bg-white text-paragraph border-borderColour dark:bg-transparent border dark:border-[#313330]  z-10 before:bg-paragraph dark:before:bg-primary hover:text-white disabled:hover:text-paragraph dark:disabled:hover:text-white",
         icon: "dark:bg-dark-200 text-paragraph hover:text-paragraph  bg-white outline-none before:bg-gray-100",
         ghost:
           "text-paragraph hover:text-paragraph  outline-none before:bg-gray dark:before:bg-dark",

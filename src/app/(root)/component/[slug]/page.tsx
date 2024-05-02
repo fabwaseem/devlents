@@ -1,4 +1,5 @@
 import Preview from "@/components/Preview";
+import { adminRoles } from "@/lib/admin-config";
 import { includeComponent } from "@/lib/prisma/includeComponent";
 import { getServerAuthSession } from "@/server/auth";
 import { db } from "@/server/db";
@@ -22,11 +23,17 @@ const page = async ({ params }: { params: { slug: string } }) => {
   if (
     component.status !== "PUBLISHED" &&
     component.userId !== session?.user.id
+
   ) {
-    return notFound();
+    if (!session?.user || !adminRoles.includes(session?.user.role)) {
+      return notFound();
+    }
   }
 
-  if (session?.user.id !== component.userId) {
+  if (
+    session?.user.id !== component.userId &&
+    component.status === "PUBLISHED"
+  ) {
     await db.component.update({
       where: {
         id: component.id,

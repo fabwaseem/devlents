@@ -18,7 +18,7 @@ export function getInitials(name: string) {
 interface UrlQueryParams {
   params: string;
   key?: string;
-  value?: string | null;
+  value?: string | null ;
   keysToRemove?: string[];
 }
 

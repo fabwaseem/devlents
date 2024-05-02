@@ -35,6 +35,7 @@ const page = async ({ searchParams }: Props) => {
         searchParams,
         type: "components",
         status: "PUBLISHED",
+        session,
       }),
     }),
     db.component.findMany({
@@ -44,6 +45,7 @@ const page = async ({ searchParams }: Props) => {
         searchParams,
         type: "components",
         status: "PUBLISHED",
+        session,
       }),
       include: includeComponent(session?.user.id),
     }),

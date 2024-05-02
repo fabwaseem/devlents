@@ -1,10 +1,13 @@
 import { type ComponentType, type ComponentStatus } from "@prisma/client";
+import { Session } from "next-auth";
+import { adminRoles } from "../admin-config";
 
 type SearchParams = {
   page?: number;
   category?: string;
   sortBy?: string;
   query?: string;
+  status?: ComponentStatus;
 };
 type ComponentFilters =
   | {
@@ -12,6 +15,7 @@ type ComponentFilters =
       type: "components";
       status: ComponentStatus;
       userId?: string;
+      session?: Session | null;
       compType?: string;
     }
   | {
@@ -19,6 +23,7 @@ type ComponentFilters =
       type: "componentstypes";
       compType: "favourites" | "css" | "tailwind";
       status: ComponentStatus;
+      session?: Session | null;
       userId?: string;
     }
   | {
@@ -26,7 +31,16 @@ type ComponentFilters =
       type: "profile";
       status: ComponentStatus;
       userId: string;
+      session?: Session | null;
       compType?: string;
+    }
+  | {
+      searchParams: SearchParams;
+      type: "admin";
+      status?: ComponentStatus;
+      userId?: string;
+      compType?: string;
+      session?: Session | null;
     };
 
 export const componentFilters = ({
@@ -35,6 +49,7 @@ export const componentFilters = ({
   status,
   userId,
   compType,
+  session,
 }: ComponentFilters) => {
   const sortBy = searchParams.sortBy ?? "latest";
   const query = searchParams.query ?? "";
@@ -55,6 +70,10 @@ export const componentFilters = ({
       upvotes: {
         _count: "desc",
       },
+    };
+  } else if (sortBy === "status") {
+    sort = {
+      status: "desc",
     };
   }
 
@@ -87,13 +106,16 @@ export const componentFilters = ({
     });
   }
 
+  session?.user &&
+  adminRoles.includes(session?.user.role) &&
+  searchParams.status
+    ? uncommonFilters.push({ status: searchParams.status })
+    : uncommonFilters.push({ status });
+
   return {
     where: {
       AND: [
         ...uncommonFilters,
-        {
-          status,
-        },
         {
           category: { slug: searchParams.category },
         },

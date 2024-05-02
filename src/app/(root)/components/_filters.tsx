@@ -12,18 +12,23 @@ import { Icons } from "@/components/Icons";
 import {
   Bookmark,
   Calendar,
+  ClipboardPen,
   Eye,
   Filter,
   Layers3,
   ThumbsUp,
 } from "lucide-react";
-import { componentCategories } from "@/lib/config";
+import { componentCategories, componentStatuses } from "@/lib/config";
+import { useSession } from "next-auth/react";
+import { adminRoles } from "@/lib/admin-config";
 
 const Filters = () => {
+  const { data: session } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
   const sortBy = searchParams.get("sortBy") ?? "latest";
   const category = searchParams.get("category") ?? "all";
+  const status = searchParams.get("status") ?? "all";
 
   const handleSort = ({
     key,
@@ -63,8 +68,10 @@ const Filters = () => {
     },
   ];
 
+  const isAdmin = session?.user && adminRoles.includes(session?.user.role);
+
   return (
-    <div className="flex w-full items-center gap-2 max-lg:justify-between">
+    <div className="flex flex-wrap w-full items-center gap-2 max-lg:justify-between">
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild className="group">
           <span
@@ -89,6 +96,15 @@ const Filters = () => {
               {item.value}
             </DropdownMenuItem>
           ))}
+          {isAdmin && (
+            <DropdownMenuItem
+              className={`gap-2 ${sortBy === "status" ? "before:scale-x-100" : ""}`}
+              onClick={() => handleSort({ key: "sortBy", value: "status" })}
+            >
+              <ClipboardPen size={16} />
+              status
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
       <DropdownMenu modal={false}>
@@ -123,6 +139,40 @@ const Filters = () => {
           ))}
         </DropdownMenuContent>
       </DropdownMenu>
+      {isAdmin && (
+        <DropdownMenu modal={false}>
+          <DropdownMenuTrigger asChild className="group">
+            <span
+              className={`flex cursor-pointer items-center gap-2 rounded-xl border border-transparent px-5 py-[5px] font-sans  text-base font-medium capitalize leading-8 text-paragraph transition-colors duration-500 hover:border-borderColour hover:bg-white hover:duration-500 data-[state=open]:border-primary  dark:text-white dark:hover:bg-dark-200 lg:px-4 xl:px-5`}
+            >
+              <Layers3 size={20} />{" "}
+              <span className="max-md:hidden">Status :</span>
+              {status}
+              <Icons.chevronDown
+                size={16}
+                className="arrow ml-1 mt-1 text-paragraph duration-500 group-data-[state=open]:rotate-180 dark:text-white"
+              />
+            </span>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56">
+            <DropdownMenuItem
+              className={`gap-2 ${status === "all" ? "before:scale-x-100" : ""}`}
+              onClick={() => handleSort({ keysToRemove: ["status"] })}
+            >
+              all
+            </DropdownMenuItem>
+            {componentStatuses.map((item, index) => (
+              <DropdownMenuItem
+                key={index}
+                className={`gap-2 ${category === item ? "before:scale-x-100" : ""}`}
+                onClick={() => handleSort({ key: "status", value: item })}
+              >
+                {item}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
     </div>
   );
 };

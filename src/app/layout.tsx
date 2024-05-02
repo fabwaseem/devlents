@@ -2,6 +2,7 @@ import Providers from "@/components/Providers";
 
 import ReduxProvider from "@/components/redux-provider";
 import { ThemeProvider } from "@/components/theme-provider";
+import ToastProvider from "@/components/toast-provider";
 import { getServerAuthSession } from "@/server/auth";
 import "@/styles/globals.css";
 import {
@@ -59,6 +60,7 @@ export default async function RootLayout({
             >
               <NextTopLoader color="#6139ff" />
               {children}
+              <ToastProvider />
             </ThemeProvider>
           </ReduxProvider>
         </Providers>

@@ -24,27 +24,27 @@ import { Checkbox } from "./ui/Checkbox";
 
 const items = [
   {
-    id: "improvement",
+    id: "IMPROVEMENT",
     label: "Improvement 👍",
   },
   {
-    id: "integration",
+    id: "INTEGRATION",
     label: "Integrations 🔗",
   },
   {
-    id: "style",
+    id: "STYLING",
     label: "Styling 🎨",
   },
   {
-    id: "misc",
+    id: "MISC",
     label: "Misc 🤷",
   },
   {
-    id: "bug",
+    id: "BUG",
     label: "Bug Report 🐛",
   },
   {
-    id: "feature",
+    id: "FEATURE",
     label: "Feature Request 🚀",
   },
 ] as const;
@@ -58,7 +58,7 @@ const Feedback = () => {
     }),
     description: z.string().max(500, {
       message: "Please write a description less than 500 characters",
-    }),
+    }), 
     type: z.array(z.string()),
   });
 

@@ -1,4 +1,4 @@
-import { Component, ComponentStatus } from "@prisma/client";
+import { Component, ComponentStatus, Feedback } from "@prisma/client";
 import { type LucideIcon } from "lucide-react";
 
 export type SidebarNavItem = {
@@ -43,5 +43,12 @@ type ComponentData = Component & {
   _count: {
     upvotes: number;
     favourites: number;
+  };
+};
+
+type FeedbackData = Feedback & {
+  user: {
+    username: string?;
+    name: string;
   };
 };

@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { formUrlQuery } from "@/lib/utils";
 import { Search } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { type } from "os";
 import React, { useState } from "react";
 
@@ -14,6 +14,7 @@ const SearchForm = ({
 }) => {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const pathname = usePathname()
   const [query, setQuery] = useState<string>("");
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -24,7 +25,8 @@ const SearchForm = ({
       key: "query",
       value: query,
     });
-    newUrl = type === "LANDING" && newUrl ? `/components?${newUrl}` : newUrl;
+    console.log(newUrl)
+    // newUrl = type === "LANDING" && newUrl ? `/components?${newUrl}` : newUrl;
     router.push(newUrl);
   };
 

@@ -1,5 +1,6 @@
 import { Icons } from "@/components/Icons";
 import { Logos } from "@/components/Logos";
+import { ComponentStatus, FeedbackStatus, Role } from "@prisma/client";
 
 export const componentCategories = [
   {
@@ -42,6 +43,22 @@ export const componentCategories = [
     label: "Toggle switch",
     value: "toggle-switch",
   },
+];
+
+export const componentStatuses: ComponentStatus[] = [
+  "PUBLISHED",
+  "REVIEW",
+  "DRAFT",
+  "REJECTED",
+];
+
+export const userRoles: Role[] = ["USER", "MANAGER", "ADMIN", "SUPERADMIN"];
+
+export const feedbackStatues: FeedbackStatus[] = [
+  "UNDER_REVIEW",
+  "PLANNED",
+  "IN_DEVELOPMENT",
+  "SHIPPED",
 ];
 
 const componentLinks = [

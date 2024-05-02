@@ -55,6 +55,7 @@ const page = async ({ searchParams, params }: Props) => {
         status: "PUBLISHED",
         userId: session?.user.id,
         compType: type as "favourites" | "css" | "tailwind",
+        session,
       }),
     }),
     db.component.findMany({
@@ -66,6 +67,7 @@ const page = async ({ searchParams, params }: Props) => {
         status: "PUBLISHED",
         userId: session?.user.id,
         compType: type as "favourites" | "css" | "tailwind",
+        session,
       }),
       include: includeComponent(session?.user.id),
     }),

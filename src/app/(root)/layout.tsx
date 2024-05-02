@@ -3,7 +3,6 @@ import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { Parallax } from "@/components/aos";
 import { ThemeToggle } from "@/components/theme-toggle";
-import ToastProvider from "@/components/toast-provider";
 import { getServerAuthSession } from "@/server/auth";
 import React from "react";
 
@@ -18,7 +17,6 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
       <main className="min-h-screen">{children}</main>
       {session && <Feedback />}
       <Footer />
-      <ToastProvider />
     </>
   );
 };
