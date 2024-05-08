@@ -21,7 +21,6 @@ import { Textarea } from "@/components/ui/Textarea";
 import { type User } from "@prisma/client";
 
 const ManageProfile = ({ user }: { user: User }) => {
-  const { data: session, update } = useSession();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -65,11 +64,6 @@ const ManageProfile = ({ user }: { user: User }) => {
     const resData = (await response.json()) as ResponseData;
 
     if (response.status === 201) {
-      await update({
-        user: {
-          name: values.name,
-        },
-      });
       toast.success(resData.msg);
       setOpen(false);
       window.location.reload();

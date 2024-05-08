@@ -8,8 +8,6 @@ import DataRow from "./_dataRow";
 import TablePagination from "@/components/admin/TablePagination";
 import Filters from "@/app/(root)/components/_filters";
 import SearchForm from "@/app/(root)/SearchForm";
-import { getServerAuthSession } from "@/server/auth";
-import { count } from "console";
 
 interface Props {
   searchParams: {
@@ -91,7 +89,7 @@ const page = async ({ searchParams }: Props) => {
         </>
       ) : (
         <div className="flex h-[300px] items-center justify-center">
-          <p className="text-center text-paragraph">No Users found</p>
+          <p className="text-center text-paragraph">No Feedbacks found</p>
         </div>
       )}
     </>

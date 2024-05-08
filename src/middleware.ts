@@ -4,7 +4,6 @@ import { NextResponse } from "next/server";
 import {
   DEFAULT_LOGIN_REDIRECT,
   adminRoutesPrefix,
-  allowedOrigins,
   apiAuthPrefix,
   authRoutes,
   publicRoutes,

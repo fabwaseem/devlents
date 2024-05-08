@@ -3,7 +3,7 @@
 import CodeEditor from "@/components/CodeEditor";
 import { Icons } from "@/components/Icons";
 import { Button } from "@/components/ui/Button";
-import React, { useState } from "react";
+import React, { useState, useTransition } from "react";
 import "react-responsive-modal/styles.css";
 import axios from "axios";
 import { formatNumber, handleDownload } from "@/lib/utils";
@@ -32,6 +32,8 @@ import {
 } from "./ui/dropdown-menu";
 import Modal from "react-responsive-modal";
 import { ComponentData } from "@/types";
+import { addFavorite, addUpvote, deleteComponent, removeFavorite, removeUpvote } from "@/actions/user/component";
+
 
 const Preview = ({
   session,
@@ -40,6 +42,7 @@ const Preview = ({
   session?: Session | null;
   component: ComponentData;
 }) => {
+  const [isPending, startTransition] = useTransition();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   const [showCode, setShowCode] = useState<boolean>(false);
@@ -53,70 +56,91 @@ const Preview = ({
   const params = useParams();
 
   const handleDelete = async () => {
-    setIsLoading(true);
-    try {
-      const response = await axios.delete(`/api/components`, {
-        data: {
-          id: component?.id,
-        },
-      });
-      if (response.status === 200) {
-        toast.success("Deleted successfully");
-        router.push(`/profile/${session?.user.username}`);
-      } else {
-        toast.error("Something went wrong");
-      }
-    } catch (error) {
-      if (typeof error === "string") {
-        toast.error(error);
-      }
-    }
-    setIsLoading(false);
+    startTransition(() => {
+      deleteComponent(component.id)
+        .then((data) => {
+          if (data.type === "error") {
+            toast.error(data.message);
+          } else {
+            setOpen(false);
+            router.push("/");
+          }
+        })
+        .catch((error) => {
+          toast.error(error.message);
+        });
+    });
   };
 
   const handleUpvote = async () => {
-    try {
-      const response = await axios.post(`/api/components/upvote`, {
-        id: component?.id,
-        upvoted: state.upvoted,
-      });
-      if (response.status === 200) {
-        let totalUpvotes = state.totalUpvotes;
-        if (state.upvoted) {
-          totalUpvotes -= 1;
-        } else {
-          totalUpvotes += 1;
-        }
-        setState({
-          ...state,
-          upvoted: !state.upvoted,
-          totalUpvotes,
+    if (state.upvoted) {
+      removeUpvote(component.id)
+        .then((data) => {
+          if (data.type === "error") {
+            toast.error(data.message);
+          } else {
+            setState({
+              ...state,
+              upvoted: false,
+              totalUpvotes: state.totalUpvotes - 1,
+            });
+          }
+        })
+        .catch((error) => {
+          toast.error(error.message);
         });
-      } else {
-        toast.error("Something went wrong");
-      }
-    } catch (error) {
-      if (typeof error === "string") {
-        toast.error(error);
-      }
+    } else {
+      addUpvote(component.id)
+        .then((data) => {
+          if (data.type === "error") {
+            toast.error(data.message);
+          } else {
+            setState({
+              ...state,
+              upvoted: true,
+              totalUpvotes: state.totalUpvotes + 1,
+            });
+          }
+        })
+        .catch((error) => {
+          toast.error(error.message);
+        });
     }
   };
 
   const handleFavourite = async () => {
-    try {
-      const response = await axios.post(`/api/components/favourite`, {
-        id: component?.id,
-        favorited: state.favorited,
-      });
-      if (response.status === 200) {
-        setState({ ...state, favorited: !state.favorited });
-      } else {
-        toast.error("Something went wrong");
-      }
-    } catch (error) {
-      if (typeof error === "string") {
-        toast.error(error);
-      }
+    if (state.favorited) {
+      removeFavorite(component.id)
+        .then((data) => {
+          if (data.type === "error") {
+            toast.error(data.message);
+          } else {
+            setState({
+              ...state,
+              favorited: false,
+              totalFavourites: state.totalFavourites - 1,
+            });
+          }
+        })
+        .catch((error) => {
+          toast.error(error.message);
+        });
+    } else {
+      addFavorite(component.id)
+        .then((data) => {
+          if (data.type === "error") {
+            toast.error(data.message);
+          } else {
+            setState({
+              ...state,
+              favorited: true,
+              totalFavourites: state.totalFavourites + 1,
+            });
+          }
+        })
+        .catch((error) => {
+          toast.error(error.message);
+        });
     }
   };
 

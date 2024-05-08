@@ -8,28 +8,27 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { componentStatuses } from "@/lib/config";
-import { ComponentData } from "@/types";
-import { ComponentStatus } from "@prisma/client";
-import {  Eye, Trash } from "lucide-react";
+import { type ComponentData } from "@/types";
+import { type ComponentStatus } from "@prisma/client";
+import { Eye, Trash } from "lucide-react";
 import Link from "next/link";
-import React, { useTransition } from "react";
+import React, { startTransition, useTransition } from "react";
 import { toast } from "react-toastify";
-
 
 const DataRow = ({ component }: { component: ComponentData }) => {
   const [isPending, startTransition] = useTransition();
 
   const handleDelete = async () => {
-    startTransition(() => {
-      deleteComponent(component.id).then((data) => {
+    startTransition(async () => {
+      await deleteComponent(component.id).then((data) => {
         toast.success(data.message);
       });
     });
   };
 
   const handleUpdateStatus = async (status: ComponentStatus) => {
-    startTransition(() => {
-      updateComponent(component.id, { status }).then((data) => {
+    startTransition(async() => {
+      await updateComponent(component.id, { status }).then((data) => {
         toast.success(data.message);
       });
     });

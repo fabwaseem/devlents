@@ -52,3 +52,8 @@ type FeedbackData = Feedback & {
     name: string;
   };
 };
+
+type FormMsgProps = {
+  type: "error" | "success" | "info" | "warning";
+  message?: string;
+};

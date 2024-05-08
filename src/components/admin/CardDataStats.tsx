@@ -1,12 +1,12 @@
+import { formatNumber } from "@/lib/utils";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import React, { ReactNode } from "react";
 
 interface CardDataStatsProps {
   title: string;
-  total: string;
-  rate: string;
-  levelUp?: boolean;
-  levelDown?: boolean;
+  total: number;
+  rate: number;
+  type?: "up" | "down";
   children: ReactNode;
 }
 
@@ -14,8 +14,7 @@ const CardDataStats: React.FC<CardDataStatsProps> = ({
   title,
   total,
   rate,
-  levelUp,
-  levelDown,
+  type,
   children,
 }) => {
   return (
@@ -26,19 +25,17 @@ const CardDataStats: React.FC<CardDataStatsProps> = ({
 
       <div className="mt-4 flex items-end justify-between">
         <div>
-          <h4 className="font-bold">{total}</h4>
+          <h4 className="font-bold">{formatNumber(total)}</h4>
           <span className="text-sm font-medium">{title}</span>
         </div>
 
         <span
           className={`flex items-center gap-1 text-sm font-medium ${
-            levelUp && "text-green-500"
-          } ${levelDown && "text-red-500"} `}
+            type === "up" ? "text-green-500" : "text-red-500"
+          }  `}
         >
-          {rate}
-
-          {levelUp && <ArrowUp size={16} />}
-          {levelDown && <ArrowDown size={16} />}
+          {rate}%
+          {type === "up" ? <ArrowUp size={16} /> : <ArrowDown size={16} />}
         </span>
       </div>
     </div>

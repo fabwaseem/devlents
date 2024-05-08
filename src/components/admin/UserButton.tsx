@@ -17,8 +17,8 @@ const UserButton = () => {
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Avatar className="cursor-pointer">
-          <AvatarImage src={session?.user.image!} />
-          <AvatarFallback>{getInitials(session?.user.name!)}</AvatarFallback>
+          <AvatarImage src={session?.user.image +""} />
+          <AvatarFallback>{getInitials(session?.user.name +"")}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">

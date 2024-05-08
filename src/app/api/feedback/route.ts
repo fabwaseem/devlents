@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
   try {
     const data = (await request.json()) as Body;
     console.log(data);
-    const { title, description, type } = data;
+    const { title, description } = data;
     const session = await getServerAuthSession();
 
     if (!session?.user) {

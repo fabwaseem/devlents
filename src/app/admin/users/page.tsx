@@ -3,13 +3,11 @@ import { db } from "@/server/db";
 import React from "react";
 import { userFilters } from "@/lib/prisma/userFilters";
 import { tableDataPerPage } from "@/lib/admin-config";
-import { includeComponent } from "@/lib/prisma/includeComponent";
 
 import DataRow from "./_dataRow";
 import TablePagination from "@/components/admin/TablePagination";
 import Filters from "@/app/(root)/components/_filters";
 import SearchForm from "@/app/(root)/SearchForm";
-import { getServerAuthSession } from "@/server/auth";
 
 interface Props {
   searchParams: {

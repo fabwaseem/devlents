@@ -58,7 +58,7 @@ const Feedback = () => {
     }),
     description: z.string().max(500, {
       message: "Please write a description less than 500 characters",
-    }), 
+    }),
     type: z.array(z.string()),
   });
 
@@ -97,7 +97,7 @@ const Feedback = () => {
   return (
     <Drawer direction="right">
       <DrawerTrigger asChild>
-        <Button size={"icon"} className="fixed bottom-5 right-5 z-50">
+        <Button size={"icon"} className="fixed bottom-5 right-5 z-50 animate-pulse">
           <Icons.feedback />
         </Button>
       </DrawerTrigger>

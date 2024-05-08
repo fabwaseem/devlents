@@ -1,12 +1,11 @@
 "use client";
-import { User } from "@prisma/client";
+
 import Image from "next/image";
 import React from "react";
 import UserImage from "public/images/user.jpg";
 import { useSession } from "next-auth/react";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { data } from "tailwindcss/defaultTheme";
 const AvatarUpload = () => {
   const { data: session, update } = useSession();
 
@@ -22,7 +21,7 @@ const AvatarUpload = () => {
       const data = await res.data;
       if (res.status === 201) {
         toast.success(data.msg);
-        update({
+        await update({
           user: {
             image: data.url,
           },

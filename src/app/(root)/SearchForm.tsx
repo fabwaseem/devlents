@@ -4,7 +4,6 @@ import { Input } from "@/components/ui/Input";
 import { formUrlQuery } from "@/lib/utils";
 import { Search } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { type } from "os";
 import React, { useState } from "react";
 
 const SearchForm = ({
@@ -14,7 +13,6 @@ const SearchForm = ({
 }) => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const pathname = usePathname()
   const [query, setQuery] = useState<string>("");
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

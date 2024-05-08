@@ -1,7 +1,7 @@
 import { getServerAuthSession } from "@/server/auth";
 import { db } from "@/server/db";
 import console from "console";
-import { NextRequest, NextResponse } from "next/server";
+import {type NextRequest, NextResponse } from "next/server";
 import cloudinary from "@/lib/cloudinary";
 import path from "path";
 import fs from "fs/promises";

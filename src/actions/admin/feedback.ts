@@ -1,5 +1,6 @@
 "use server";
 import { db } from "@/server/db";
+import { FeedbackStatus } from "@prisma/client";
 
 export const deleteFeedback = async (id: string) => {
   await db.feedback.delete({
@@ -11,8 +12,11 @@ export const deleteFeedback = async (id: string) => {
   return { type: "success", message: "Feedback deleted successfully" };
 };
 
+interface UpdateFeedbackData {
+  status?: FeedbackStatus;
+}
 
-export const updateFeedback = async (id: string, data: any) => {
+export const updateFeedback = async (id: string, data: UpdateFeedbackData) => {
   await db.feedback.update({
     where: {
       id,
@@ -21,4 +25,4 @@ export const updateFeedback = async (id: string, data: any) => {
   });
 
   return { type: "success", message: "Feedback updated successfully" };
-}
+};

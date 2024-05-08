@@ -1,5 +1,4 @@
 "use client";
-import { deleteComponent, updateComponent } from "@/actions/admin/component";
 import { deleteUser, updateUser } from "@/actions/admin/user";
 import { Button } from "@/components/ui/Button";
 import {
@@ -9,9 +8,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { userRoles } from "@/lib/config";
-import { Role, User } from "@prisma/client";
+import type { Role, User } from "@prisma/client";
 import { Eye, Trash } from "lucide-react";
-import { Session } from "next-auth";
 import Link from "next/link";
 import React, { useTransition } from "react";
 import { toast } from "react-toastify";
@@ -25,8 +23,8 @@ const DataRow = ({
 
   const handleDelete = async () => {
 
-    startTransition(() => {
-      deleteUser(user.id).then((data) => {
+    startTransition(async() => {
+     await deleteUser(user.id).then((data) => {
         data.type === "success"
           ? toast.success(data.message)
           : toast.error(data.message);
@@ -35,8 +33,8 @@ const DataRow = ({
   };
 
   const handleUpdateRole = async (role: Role) => {
-    startTransition(() => {
-      updateUser(user.id, { role }).then((data) => {
+    startTransition(async() => {
+     await updateUser(user.id, { role }).then((data) => {
         data.type === "success"
           ? toast.success(data.message)
           : toast.error(data.message);

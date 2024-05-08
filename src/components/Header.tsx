@@ -2,7 +2,7 @@
 import { navLinks } from "@/lib/config";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useTransition } from "react";
 import { Button } from "./ui/Button";
 import { Icons } from "./Icons";
 import { usePathname } from "next/navigation";
@@ -17,13 +17,23 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { signOut } from "next-auth/react";
 import { Logos } from "./Logos";
+import { Tooltip } from "react-tooltip";
+import { getUserLents } from "@/actions/user/user";
+import {
+  lentsOnComponentFavourite,
+  lentsOnComponentPublish,
+  lentsOnComponentUpvote,
+} from "@/lib/admin-config";
+import { toast } from "react-toastify";
 
 const Header = ({ session }: { session: Session | null }) => {
+  const [isPending, startTransition] = useTransition();
   const pathname = usePathname();
   const isHome = pathname === "/";
   const navRef = useRef<HTMLHeadElement>(null);
   const annoucementRef = useRef<HTMLDivElement>(null);
   const [mobileMenuIsOpen, setMobileMenuIsOpen] = useState<boolean>(false);
+  const [lents, setLents] = useState<number>(0);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -48,6 +58,18 @@ const Header = ({ session }: { session: Session | null }) => {
 
   const showNotification = false;
 
+  useEffect(() => {
+    if (session) {
+      getUserLents(session.user.id!)
+        .then((lents) => {
+          setLents(lents);
+        })
+        .catch((error) => {
+          toast.error(error.message);
+        });
+    }
+  }, [session]);
+
   return (
     <>
       {!isHome && showNotification ? (
@@ -69,7 +91,7 @@ const Header = ({ session }: { session: Session | null }) => {
         <nav className="container flex  items-center ">
           <div className={` ${isHome ? "xl:min-w-[266px]" : ""} `}>
             <Link href="/" className=" relative h-8 w-8 md:h-12 md:w-12">
-              <Logos.devlents/>
+              <Logos.devlents />
             </Link>
           </div>
           <ul
@@ -170,6 +192,49 @@ const Header = ({ session }: { session: Session | null }) => {
           <ul className="flex items-center max-lg:ml-auto  [&>*:not(:last-child)]:me-2.5">
             {session ? (
               <>
+                <div
+                  className="flex h-[42px] items-center justify-center rounded-lg bg-gray-100 pl-3.5 pr-4 font-bold dark:bg-dark-200"
+                  data-tooltip-id="lents-tooltip"
+                >
+                  <Icons.lent className="mr-2 h-4 w-4 text-primary" />
+                  {lents}
+                </div>
+                <Tooltip
+                  id="lents-tooltip"
+                  className="z-[9999] flex max-w-80 flex-col justify-center !rounded-xl bg-gray !py-4 !pt-6 text-paragraph shadow-lg dark:bg-dark dark:text-white"
+                >
+                  <span className="mb-2 flex items-center justify-center text-lg font-bold ">
+                    <Icons.lent className="mr-2 h-4 w-4 text-primary" />
+                    Lent Points
+                  </span>
+                  <p className="text-sm font-normal text-gray-300">
+                    Join the ranks of top contributors by accumulating lents for
+                    your published posts and popular content.
+                  </p>
+                  <p className="mt-2 font-normal text-gray-300">You get:</p>
+                  <div className="mt-1.5 flex items-start rounded-xl bg-dark px-3 py-2 pr-4 font-normal text-gray-300 dark:bg-dark-200">
+                    <span className="points-tag flex min-w-[70px] items-center justify-center font-bold text-gray-50">
+                      <Icons.lent className="mr-2 h-4 w-4 text-primary" />{" "}
+                      {lentsOnComponentPublish}
+                    </span>{" "}
+                    when your post gets published
+                  </div>
+                  <div className="mt-1.5 flex items-start rounded-xl bg-dark px-3 py-2 pr-4 font-normal text-gray-300 dark:bg-dark-200">
+                    <span className="points-tag flex min-w-[70px] items-center justify-center font-bold text-gray-50">
+                      <Icons.lent className="mr-2 h-4 w-4 text-primary" />{" "}
+                      {lentsOnComponentUpvote}
+                    </span>{" "}
+                    when your post gets upvoted
+                  </div>
+                  <div className="mt-1.5 flex items-start rounded-xl bg-dark px-3 py-2 pr-4 font-normal text-gray-300 dark:bg-dark-200">
+                    <span className="points-tag flex min-w-[70px] items-center justify-center font-bold text-gray-50">
+                      <Icons.lent className="mr-2 h-4 w-4 text-primary" />{" "}
+                      {lentsOnComponentFavourite}
+                    </span>{" "}
+                    when your post gets favourited
+                  </div>
+                </Tooltip>
+
                 <li className="max-lg:hidden">
                   <Button asChild size={"sm"}>
                     <Link href="/create">

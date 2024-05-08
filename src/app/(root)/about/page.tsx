@@ -1,6 +1,3 @@
-import { team } from "@/lib/config";
-import Image from "next/image";
-import Link from "next/link";
 import React from "react";
 
 const page = () => {
@@ -14,7 +11,7 @@ const page = () => {
           >
             <p className="mb-4 font-medium uppercase">about devlents</p>
             <h1 className="mb-10 max-lg:mb-10">
-              The best community for developers
+              A community for developers
             </h1>
             <p className="mx-auto mb-12 max-w-[590px] max-lg:mb-10">
               We provide a simple and easy way to explore and share web
@@ -24,7 +21,7 @@ const page = () => {
           </div>
         </div>
       </section>
-      <section className="relative">
+      {/* <section className="relative">
         <div className="container relative ">
           <div className="absolute left-1/2 top-1/2  flex -translate-x-1/2 -translate-y-1/2 max-sm:hidden">
             <div className="h-[330px] w-[330px] rounded-full bg-primary-200/20 blur-[145px] xl:h-[442px] xl:w-[442px] " />
@@ -36,31 +33,31 @@ const page = () => {
               className="rounded-medium  overflow-hidden bg-white p-2.5 shadow-box dark:bg-dark-200"
 
             >
-              {/* <img
+              <img
                 src="images/about/about1.png"
                 alt="about images"
                 className="w-full rounded"
-              /> */}
+              />
             </div>
             <div
               className="rounded-medium  overflow-hidden bg-white p-2.5 shadow-box dark:bg-dark-200"
 
             >
-              {/* <img
+              <img
                 src="images/about/about2.png"
                 alt="about images"
                 className="w-full rounded"
-              /> */}
+              />
             </div>
             <div
               className="rounded-medium  overflow-hidden bg-white p-2.5 shadow-box dark:bg-dark-200"
 
             >
-              {/* <img
+              <img
                 src="images/about/about3.png"
                 alt="about images"
                 className="w-full rounded"
-              /> */}
+              />
             </div>
           </div>
           <div className="relative z-10 grid grid-cols-12">
@@ -86,8 +83,8 @@ const page = () => {
             </div>
           </div>
         </div>
-      </section>
-      <section className="max-md:pb-25 bg-white pb-[170px] pt-[150px] dark:bg-dark-300 max-md:overflow-hidden max-md:pt-20">
+      </section> */}
+      {/* <section className="max-md:pb-25 bg-white pb-[170px] pt-[150px] dark:bg-dark-300 max-md:overflow-hidden max-md:pt-20">
         <div className="container">
           <div className="mx-auto mb-12 max-w-[475px] text-center">
             <p className="section-tagline">Our Team</p>
@@ -137,7 +134,7 @@ const page = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
     </>
   );
 };

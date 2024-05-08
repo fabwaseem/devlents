@@ -2,7 +2,6 @@ import ComponentCard from "@/components/ComponentCard";
 import { Grids } from "@/components/Grids";
 import { Icons } from "@/components/Icons";
 import { Button } from "@/components/ui/Button";
-import { languagesLogos } from "@/lib/config";
 import { includeComponent } from "@/lib/prisma/includeComponent";
 import { formatNumber } from "@/lib/utils";
 import { getServerAuthSession } from "@/server/auth";
@@ -17,7 +16,7 @@ const page = async () => {
   const [count, components] = await db.$transaction([
     db.component.count(),
     db.component.findMany({
-      take: 9,
+      take: 15,
       where: {
         status: "PUBLISHED",
       },
@@ -27,16 +26,16 @@ const page = async () => {
       include: includeComponent(session?.user.id),
     }),
   ]);
-  const latestComponents = await db.component.findMany({
-    take: 9,
-    where: {
-      status: "PUBLISHED",
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-    include: includeComponent(session?.user.id),
-  });
+  // const latestComponents = await db.component.findMany({
+  //   take: 9,
+  //   where: {
+  //     status: "PUBLISHED",
+  //   },
+  //   orderBy: {
+  //     createdAt: "desc",
+  //   },
+  //   include: includeComponent(session?.user.id),
+  // });
 
   return (
     <>
@@ -159,7 +158,7 @@ const page = async () => {
       </section>
 
       {/* Latest SECTION */}
-      <section className="relative bg-white py-[150px] dark:bg-dark-300 max-sm:overflow-hidden">
+      {/* <section className="relative bg-white py-[150px] dark:bg-dark-300 max-sm:overflow-hidden">
         <div className="container ">
           <div className="mb-12">
             <p className="section-tagline max-lg:text-center">
@@ -193,7 +192,7 @@ const page = async () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Categories SECTION */}
       {/* <section className=" bg-white pb-[145px] pt-[140px] dark:bg-dark-300 max-lg:py-20">
@@ -262,7 +261,7 @@ const page = async () => {
       </section> */}
 
       {/* POPULAR SECTION */}
-      <section className="relative bg-white pb-[150px] dark:bg-dark-300 max-sm:overflow-hidden">
+      <section className="relative bg-white py-[150px] dark:bg-dark-300 max-sm:overflow-hidden">
         <div className="container ">
           <div className="mb-12">
             <p className="section-tagline max-lg:text-center">
@@ -291,8 +290,8 @@ const page = async () => {
             </div>
             <div className="mt-[60px] flex items-center justify-center ">
               <Button variant={"outline"} asChild>
-                <Link href={"/components?sortBy=views"}>
-                  See All Popular Components
+                <Link href={"/components"}>
+                  See All Components
                 </Link>
               </Button>
             </div>

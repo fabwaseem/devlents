@@ -4,7 +4,6 @@ import { Button } from "../ui/Button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { formUrlQuery } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
-import page from "@/app/(root)/page";
 
 interface Props {
   page: number;

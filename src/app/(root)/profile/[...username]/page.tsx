@@ -23,7 +23,6 @@ import {
 import Pagination from "../../components/_pagination";
 import { componentsPerPage } from "@/lib/config";
 import { Link2, Pin } from "lucide-react";
-import { Logos } from "@/components/Logos";
 
 interface Props {
   searchParams: {

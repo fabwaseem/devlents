@@ -21,7 +21,8 @@ import ReactShadowRoot from "react-shadow-root";
 import parse from "html-react-parser";
 import { Allotment } from "allotment";
 import { Delete } from "lucide-react";
-import { Logos } from "./Logos";
+
+
 type Props = Component & {
   user: User;
 };
@@ -175,7 +176,7 @@ const CreateForm = ({ component }: { component?: Props }) => {
         <div className="min-h-[500px] flex-1 overflow-hidden rounded-xl border dark:border-gray">
           <Allotment>
             <Allotment.Pane minSize={300}>
-              <CodeEditor code={debouncedCode} onChange={onChange} />
+              <CodeEditor code={code} onChange={onChange} />
             </Allotment.Pane>
             <Allotment.Pane minSize={300}>
               <div className="relative z-[1] flex h-full w-full  items-center  justify-center bg-gray dark:bg-dark-200">

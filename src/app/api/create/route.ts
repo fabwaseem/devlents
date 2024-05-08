@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     const css = data.get("css") as string;
     const javascript = data.get("javascript") as string;
 
-    if ( !category || !tagsString) {
+    if (!category || !tagsString) {
       return NextResponse.json(
         {
           msg: `Please fill all required fields.`,
@@ -100,6 +100,15 @@ export async function POST(request: NextRequest) {
           userId: session?.user.id + "",
         },
       });
+
+      await db.activity.create({
+        data: {
+          activity: "COMPONENT_CREATED",
+          userId: session?.user.id + "",
+          componentId: component.id,
+        },
+      });
+
       return NextResponse.json(
         { msg: "Component created successfully!", component },
         { status: 201 },

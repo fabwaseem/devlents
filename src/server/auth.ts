@@ -4,7 +4,7 @@ import { type Adapter } from "next-auth/adapters";
 import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { faker } from "@faker-js/faker";
 
 import { env } from "@/env";
@@ -89,12 +89,12 @@ export const authOptions: NextAuthOptions = {
       },
     }),
     GithubProvider({
-      clientId: env.GITHUB_CLIENT_ID as string,
-      clientSecret: env.GITHUB_CLIENT_SECRET as string,
+      clientId: env.GITHUB_CLIENT_ID ,
+      clientSecret: env.GITHUB_CLIENT_SECRET ,
     }),
     GoogleProvider({
-      clientId: env.GOOGLE_CLIENT_ID as string,
-      clientSecret: env.GOOGLE_CLIENT_SECRET as string,
+      clientId: env.GOOGLE_CLIENT_ID ,
+      clientSecret: env.GOOGLE_CLIENT_SECRET ,
     }),
   ],
   events: {

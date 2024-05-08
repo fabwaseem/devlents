@@ -1,7 +1,21 @@
 import { Role } from "@prisma/client";
-import { Component, LayoutDashboard, Rss, User, Users } from "lucide-react";
+import {
+  Component,
+  LayoutDashboard,
+  LucideIcon,
+  Rss,
+  User,
+  Users,
+} from "lucide-react";
 
-export const sidebarLinks = [
+interface SidebarLink {
+  label: string;
+  path: string;
+  icon: LucideIcon;
+  submenu?: SidebarLink[];
+}
+
+export const sidebarLinks: SidebarLink[] = [
   {
     label: "Dashboard",
     path: "",
@@ -34,3 +48,7 @@ export const minRequiredSuperAdmins = 1;
 
 export const rolesCanChangeRole: Role[] = ["ADMIN", "SUPERADMIN"];
 export const adminCanChangeRoleUpto: Role[] = ["USER", "MANAGER"];
+
+export const lentsOnComponentPublish = 50;
+export const lentsOnComponentUpvote = 10;
+export const lentsOnComponentFavourite = 20;

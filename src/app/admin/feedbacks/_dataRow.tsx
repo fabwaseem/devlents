@@ -7,11 +7,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { feedbackStatues, userRoles } from "@/lib/config";
-import { FeedbackData } from "@/types";
-import { Feedback, FeedbackStatus, Role } from "@prisma/client";
+import { feedbackStatues } from "@/lib/config";
+import {type FeedbackData } from "@/types";
+import type {  FeedbackStatus } from "@prisma/client";
 import { Eye, Trash } from "lucide-react";
-import { Session } from "next-auth";
 import Link from "next/link";
 import React, { useTransition } from "react";
 import { toast } from "react-toastify";
@@ -25,8 +24,8 @@ const DataRow = ({
 
   const handleDelete = async () => {
 
-    startTransition(() => {
-      deleteFeedback(feedback.id).then((data) => {
+    startTransition(async() => {
+     await deleteFeedback(feedback.id).then((data) => {
         data.type === "success"
           ? toast.success(data.message)
           : toast.error(data.message);
@@ -35,8 +34,8 @@ const DataRow = ({
   };
 
   const handleUpdateStatus = async (status: FeedbackStatus) => {
-    startTransition(() => {
-      updateFeedback(feedback.id, { status }).then((data) => {
+    startTransition(async() => {
+     await updateFeedback(feedback.id, { status }).then((data) => {
         data.type === "success"
           ? toast.success(data.message)
           : toast.error(data.message);

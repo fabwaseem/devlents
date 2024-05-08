@@ -43,10 +43,21 @@ const CodeEditor = ({ code, onChange }: CodeEditorProps) => {
     },
   ];
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor>();
+
   const [state, setState] = useState({
     html: code.html ?? "",
     css: code.css ?? "",
   });
+
+  useEffect(() => {
+    // check if code.html and code.css are empty
+    if (code.html === "" && code.css === "") {
+      setState({
+        html: "",
+        css: "",
+      });
+    }
+  }, [code]);
   const [copied, setCopied] = useState(false);
 
   const [currentTab, setCurrentTab] = useState(0);
@@ -103,11 +114,11 @@ const CodeEditor = ({ code, onChange }: CodeEditorProps) => {
         ))}
       </div>
 
-      <div className="relative h-full w-full">
+      <div className="group relative h-full w-full">
         <Editor
           path={file?.name}
           defaultLanguage={file?.language}
-          defaultValue={file?.value}
+          value={state[file?.language as "html" | "css"]}
           className="py-2"
           theme={theme === "dark" ? "vs-dark" : "vs"}
           onMount={(editor) => (editorRef.current = editor)}
@@ -127,13 +138,12 @@ const CodeEditor = ({ code, onChange }: CodeEditorProps) => {
         {/* copy button if there is code*/}
         {state[file?.language as "html" | "css"]?.length > 0 && (
           <Button
-            variant={"outline"}
-            size={"sm"}
-            className="absolute right-5 top-5 capitalize"
+            variant={"icon"}
+            size={"icon"}
+            className="absolute right-5 top-5 border opacity-0 transition-opacity group-hover:opacity-100"
             onClick={handleCopy}
           >
             {copied ? <CheckCircle size={16} /> : <Copy size={16} />}
-            {copied ? "copied" : "copy"}
           </Button>
         )}
       </div>

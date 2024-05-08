@@ -2,9 +2,9 @@ import { env } from "@/env";
 import { v2 as cloudinary } from "cloudinary";
 
 cloudinary.config({
-  cloud_name: env.CLOUDINARY_CLOUD_NAME as string,
-  api_key: env.CLOUDINARY_API_KEY as string,
-  api_secret: env.CLOUDINARY_API_SECRET as string,
+  cloud_name: env.CLOUDINARY_CLOUD_NAME,
+  api_key: env.CLOUDINARY_API_KEY,
+  api_secret: env.CLOUDINARY_API_SECRET,
 });
 
 export default cloudinary;

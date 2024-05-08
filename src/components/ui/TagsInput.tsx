@@ -13,17 +13,7 @@ export interface TagsInputProps {
 }
 
 const TagsInput = React.forwardRef<HTMLInputElement, TagsInputProps>(
-  (
-    {
-      className,
-      label,
-      tags = [],
-      onChange,
-      maxTags = 5,
-      ...props
-    },
-    ref,
-  ) => {
+  ({ className, label, tags = [], onChange, maxTags = 5, ...props }, ref) => {
     const [currentTag, setCurrentTag] = React.useState("");
     const [allTags, setAllTags] = React.useState(tags);
 
@@ -34,6 +24,9 @@ const TagsInput = React.forwardRef<HTMLInputElement, TagsInputProps>(
     const handleTagCreation = (
       event: React.KeyboardEvent<HTMLInputElement>,
     ) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+      }
       if (
         (event.key === "Enter" || event.key === ",") &&
         currentTag.trim() &&

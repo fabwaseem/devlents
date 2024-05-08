@@ -8,7 +8,6 @@ export default {
     extend: {
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
-        Inter: ["var(--font-inter)", ...fontFamily.sans],
         jakarta_sans: ["var(--font-jakarta_sans)", ...fontFamily.sans],
         playfair: ["var(--font-playfair)", ...fontFamily.sans],
       },

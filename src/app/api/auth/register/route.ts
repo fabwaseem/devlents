@@ -1,5 +1,5 @@
 import { db } from "@/server/db";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { type NextRequest, NextResponse } from "next/server";
 
 interface Body {

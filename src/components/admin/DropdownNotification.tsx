@@ -1,12 +1,28 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import {
+  startTransition,
+  useEffect,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import { Button } from "../ui/Button";
 import { Bell } from "lucide-react";
+import { getNewActivities, markRead } from "@/actions/admin/activity";
+import { Activity } from "@prisma/client";
+import { toast } from "react-toastify";
+
+type ActivityData = Activity & {
+  user: { username: string | null } | null;
+  component: { category: { title: string }; slug: string } | null;
+};
 
 const DropdownNotification = () => {
+  const [isePending, startTransition] = useTransition();
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [notifying, setNotifying] = useState(true);
+  const [notifying, setNotifying] = useState(false);
+  const [activities, setActivities] = useState<ActivityData[]>([]);
 
   const trigger = useRef<any>(null);
   const dropdown = useRef<any>(null);
@@ -35,6 +51,29 @@ const DropdownNotification = () => {
     document.addEventListener("keydown", keyHandler);
     return () => document.removeEventListener("keydown", keyHandler);
   });
+
+  useEffect(() => {
+    startTransition(async () => {
+      await getNewActivities().then((data) => {
+        if (data.length > 0) {
+          setActivities(data);
+          setNotifying(true);
+        }
+      });
+    });
+  }, []);
+
+  const handleRead = async (id: string) => {
+    startTransition(() => {
+      markRead(id)
+        .then(() => {
+          setActivities((prev) => prev.filter((item) => item.id !== id));
+        })
+        .catch((error) => {
+          toast.error(error.message);
+        });
+    });
+  };
 
   return (
     <li className="relative">
@@ -72,16 +111,25 @@ const DropdownNotification = () => {
 
         <ul className="flex h-auto flex-col overflow-y-auto">
           <li>
-            <Link
-              className="px-4 hover:bg-gray-200   dark:hover:bg-dark-200 flex flex-col gap-2.5 border border-t border-borderColour py-3 dark:border-borderColour-dark"
-              href="#"
-            >
-              <p className="text-sm">
-                  Edit your information in a swipe
-              </p>
+            {activities.map((item, index) => (
+              <div
+                className="flex flex-col   gap-2.5 border border-t border-borderColour px-4 py-3 hover:bg-gray-200 dark:border-borderColour-dark dark:hover:bg-dark-200"
+                key={index}
+                onClick={() => handleRead(item.id)}
+              >
+                <p className="text-sm">
+                  {item.user?.username} just{" "}
+                  {item.activity === "COMPONENT_CREATED" && "created"}
+                  {item.activity === "COMPONENT_UPDATED" && "updated"}
+                  {item.activity === "COMPONENT_DELETED" && "deleted"}{" "}
+                  {item.component?.category.title} component
+                </p>
 
-              <p className="text-xs">12 May, 2025</p>
-            </Link>
+                <p className="text-xs">
+                  {new Date(item.createdAt).toLocaleString()}
+                </p>
+              </div>
+            ))}
           </li>
         </ul>
       </div>

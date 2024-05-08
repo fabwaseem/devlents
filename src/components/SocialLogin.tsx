@@ -11,7 +11,7 @@ const SocialLogin = ({ isLoading }: { isLoading?: boolean }) => {
 
   const disabled = isGoogleLoading || isGitHubLoading || isLoading;
   return (
-    <div className="flex gap-2 md:flex-col">
+    <div className="flex gap-2">
       <Button
         variant={"outline"}
         className=" group w-full"
@@ -26,11 +26,11 @@ const SocialLogin = ({ isLoading }: { isLoading?: boolean }) => {
         ) : (
           <Logos.google />
         )}{" "}
-        <span className="hidden md:block">Continue with Google</span>
+
       </Button>
       <Button
         variant={"outline"}
-        className=" group  w-full"
+        className="group  w-full"
         onClick={async () => {
           setIsGitHubLoading(true);
           await signIn("github");
@@ -42,7 +42,6 @@ const SocialLogin = ({ isLoading }: { isLoading?: boolean }) => {
         ) : (
           <Logos.gitHub className="transition-colors duration-500 group-hover:fill-white" />
         )}{" "}
-        <span className="hidden md:block">Continue with Github</span>
       </Button>
     </div>
   );

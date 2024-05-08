@@ -10,7 +10,7 @@ export const Parallax = () => {
 
     function parallax(this: HTMLElement, a: MouseEvent) {
       const childrens = this.querySelectorAll(".parallax-effect");
-      childrens.forEach((e: HTMLElement) => {
+      childrens.forEach((e: any) => {
         const t = parseInt(e.getAttribute("parallax-value") ?? "0");
         if (t) {
           const x = (e.offsetWidth - a.pageX * t) / 90;

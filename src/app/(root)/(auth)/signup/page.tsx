@@ -1,14 +1,13 @@
 import SignupForm from "@/components/SignupForm";
+import { getRandomLine } from "@/data/lines";
 import React from "react";
 
 const page = () => {
   return (
     <section className="relative mb-[150px] pt-[120px] max-md:mb-[100px]  ">
-      <div
-        className=" container relative"
-      >
-        <div className="mx-auto mb-12  text-center">
-          <h2>Connect with the community</h2>
+      <div className=" container relative">
+        <div className="mx-auto mb-12 max-w-[475px] text-center">
+          <h2>{getRandomLine("signup")}</h2>
         </div>
         <div className="relative z-10 mx-auto max-w-[510px] ">
           <div className="absolute left-1/2 top-1/2 -z-10 flex -translate-x-1/2 -translate-y-1/2 max-md:hidden max-md:flex-col">

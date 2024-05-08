@@ -28,10 +28,3 @@ export const DEFAULT_LOGIN_REDIRECT = "/";
 
 
 export const adminRoutesPrefix = "/admin";
-
-export const allowedOrigins = ["http://localhost:3000/"];
-
-export const corsOptions = {
-  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-}

@@ -3,8 +3,10 @@ import Providers from "@/components/Providers";
 import ReduxProvider from "@/components/redux-provider";
 import { ThemeProvider } from "@/components/theme-provider";
 import ToastProvider from "@/components/toast-provider";
+import { meta } from "@/lib/site-settings";
 import { getServerAuthSession } from "@/server/auth";
 import "@/styles/globals.css";
+import { Metadata } from "next";
 import {
   Inter,
   Plus_Jakarta_Sans,
@@ -18,11 +20,6 @@ const montserrat = Montserrat({
   variable: "--font-sans",
 });
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-});
-
 const jakarta_sans = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-jakarta_sans",
@@ -33,11 +30,18 @@ const playfair = Playfair_Display({
   variable: "--font-playfair",
 });
 
-export const metadata = {
-  title: "Devlents",
-  description: "The ultimate developers community",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: meta.title,
+    description: meta.description,
+    referrer: "origin-when-cross-origin",
+    keywords: meta.keywords,
+    authors: [{ name: "Waseem Anjum", url: "https://waseemanjum.com/" }],
+    creator: "Waseem Anjum",
+    publisher: "Waseem Anjum",
+    metadataBase: new URL(meta.url),
+  };
+}
 
 export default async function RootLayout({
   children,
@@ -48,7 +52,7 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${jakarta_sans.variable} ${playfair.variable} ${montserrat.variable} relative overflow-x-hidden  bg-white font-sans text-base antialiased dark:bg-dark-300`}
+        className={` ${jakarta_sans.variable} ${playfair.variable} ${montserrat.variable} relative overflow-x-hidden  bg-white font-sans text-base antialiased dark:bg-dark-300`}
       >
         <Providers session={session}>
           <ReduxProvider>
