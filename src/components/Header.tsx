@@ -288,11 +288,13 @@ const Header = ({ session }: { session: Session | null }) => {
                               variant={"icon"}
                               onClick={() => {
                                 startTransition(() => {
-                                  markAllNotificationsAsRead(
-                                    session.user.id,
-                                  ).finally(() => {
-                                    setUnreadNotifications([]);
-                                  });
+                                  markAllNotificationsAsRead(session.user.id)
+                                    .then(() => {
+                                      setUnreadNotifications([]);
+                                    })
+                                    .catch(() => {
+                                      console.log("something went wrong");
+                                    });
                                 });
                               }}
                               data-tooltip-id="tooltip"
@@ -344,7 +346,7 @@ const Header = ({ session }: { session: Session | null }) => {
                         }
 
                         return (
-                          <DropdownMenuItem>
+                          <DropdownMenuItem key={index}>
                             <div className="group relative flex items-start gap-3 py-2.5">
                               <div
                                 className={`mt-1 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md  text-white
@@ -373,15 +375,17 @@ const Header = ({ session }: { session: Session | null }) => {
                                 className="absolute right-2 top-1/2 -translate-y-1/2 transform opacity-0 transition-all group-hover:right-0 group-hover:opacity-100"
                                 onClick={() => {
                                   startTransition(() => {
-                                    markNotificationAsRead(
-                                      notification.id,
-                                    ).finally(() => {
-                                      setUnreadNotifications((prev) =>
-                                        prev?.filter(
-                                          (n) => n.id !== notification.id,
-                                        ),
-                                      );
-                                    });
+                                    markNotificationAsRead(notification.id)
+                                      .then(() => {
+                                        setUnreadNotifications((prev) =>
+                                          prev?.filter(
+                                            (n) => n.id !== notification.id,
+                                          ),
+                                        );
+                                      })
+                                      .catch(() => {
+                                        console.log("");
+                                      });
                                   });
                                 }}
                               >
