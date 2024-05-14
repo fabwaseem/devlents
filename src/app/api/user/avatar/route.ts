@@ -84,13 +84,13 @@ export async function POST(request: NextRequest) {
         crop: "fill",
       });
 
-      // check if previous image is cloudinary image and delete it
-      if (session.user.image?.includes("res.cloudinary.com")) {
-        let previousImageId = session.user.image.split("/").pop() ?? "";
-        previousImageId = previousImageId?.split("?")[0] ?? previousImageId;
-        console.log("Deleting previous image", previousImageId);
-        await cloudinary.uploader.destroy(previousImageId);
-      }
+      // // check if previous image is cloudinary image and delete it
+      // if (session.user.image?.includes("res.cloudinary.com")) {
+      //   let previousImageId = session.user.image.split("/").pop() ?? "";
+      //   previousImageId = previousImageId?.split("?")[0] ?? previousImageId;
+      //   console.log("Deleting previous image", previousImageId);
+      //   await cloudinary.uploader.destroy(previousImageId);
+      // }
 
       await db.user.update({
         where: { id: session.user.id },
