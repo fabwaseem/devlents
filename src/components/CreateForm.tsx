@@ -320,7 +320,7 @@ const CreateForm = ({ component }: { component?: Props }) => {
 
               <div>
                 <TagsInput
-                  label="Tags"
+                  label="Tags (max 5)"
                   minTags={1}
                   tags={form.watch("tags")}
                   onChange={handleTagsChange}

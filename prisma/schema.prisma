@@ -206,11 +206,21 @@ model Activity {
   componentId String?
 }
 
+enum NotificationType {
+  NEW_SIGNUP
+  ROLE_UPDATED
+  ACCOUNT_DELETED
+  COMPONENT_SUBMITTED
+  COMPONENT_APPROVED
+  COMPONENT_REJECTED
+}
+
 model Notification {
   id        String   @id @default(cuid())
   userId    String
   message   String
   read      Boolean  @default(false)
+  type      NotificationType
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

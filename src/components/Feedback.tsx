@@ -97,8 +97,12 @@ const Feedback = () => {
   return (
     <Drawer direction="right">
       <DrawerTrigger asChild>
-        <Button size={"icon"} className="fixed bottom-5 right-5 z-50 animate-pulse">
+        <Button
+          size={"sm"}
+          className="fixed bottom-5 right-5 z-50 animate-pulse"
+        >
           <Icons.feedback />
+          Feedback
         </Button>
       </DrawerTrigger>
       <DrawerContent className="sm:px-5">
@@ -170,7 +174,7 @@ const Feedback = () => {
                             return (
                               <FormItem
                                 key={item.id}
-                                className="flex flex-row items-center space-x-3 space-y-0 w-max"
+                                className="flex w-max flex-row items-center space-x-3 space-y-0"
                               >
                                 <FormControl>
                                   <div>
@@ -218,7 +222,12 @@ const Feedback = () => {
             <DrawerFooter>
               <div className="flex  gap-3">
                 <DrawerClose asChild>
-                  <Button type="button" variant="outline" className="flex-1" size={"sm"}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="flex-1"
+                    size={"sm"}
+                  >
                     Cancel
                   </Button>
                 </DrawerClose>

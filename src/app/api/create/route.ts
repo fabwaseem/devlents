@@ -109,6 +109,14 @@ export async function POST(request: NextRequest) {
         },
       });
 
+      // await db.notification.create({
+      //   data: {
+      //     userId: session?.user.id + "",
+      //     message: `Component submitted for approval`,
+      //     type: "COMPONENT_SUBMITTED",
+      //   },
+      // });
+
       return NextResponse.json(
         { msg: "Component created successfully!", component },
         { status: 201 },

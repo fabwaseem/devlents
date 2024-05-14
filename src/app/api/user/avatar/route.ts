@@ -1,11 +1,9 @@
 import { getServerAuthSession } from "@/server/auth";
 import { db } from "@/server/db";
-import console from "console";
-import {type NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import cloudinary from "@/lib/cloudinary";
-import path from "path";
-import fs from "fs/promises";
 import sharp from "sharp";
+import streamifier from "streamifier";
 
 export async function POST(request: NextRequest) {
   try {
@@ -27,7 +25,31 @@ export async function POST(request: NextRequest) {
     if (!avatar) {
       return NextResponse.json(
         {
-          msg: `No avatar found in the request`,
+          msg: `No image found in the request`,
+        },
+        {
+          status: 400,
+        },
+      );
+    }
+
+    // check if a valid image file is uploaded
+    if (!avatar.type.startsWith("image")) {
+      return NextResponse.json(
+        {
+          msg: `Invalid image file type`,
+        },
+        {
+          status: 400,
+        },
+      );
+    }
+
+    // check if image file size is less than 5MB
+    if (avatar.size > 5 * 1024 * 1024) {
+      return NextResponse.json(
+        {
+          msg: `Image file size should be less than 5MB`,
         },
         {
           status: 400,
@@ -36,26 +58,26 @@ export async function POST(request: NextRequest) {
     }
 
     try {
-      const uploadDir = path.join("public", "tmp");
-      const thumbnailPath = path.join(uploadDir, path.basename(avatar.name));
       const buffer = Buffer.from(await avatar.arrayBuffer());
       const image = await sharp(buffer)
         .resize(200)
         .jpeg({ quality: 70 })
         .toBuffer();
-      await fs.mkdir(uploadDir, { recursive: true });
-      await fs.writeFile(thumbnailPath, image);
+      const mime = avatar.type;
+      const encoding = "base64";
+      const base64 = image.toString("base64");
 
-      const uploadedImageResponse = await cloudinary.uploader.upload(
-        thumbnailPath,
-        { resource_type: "image" },
-      );
+      const dataUri = `data:${mime};${encoding},${base64}`;
 
-      await fs.unlink(thumbnailPath);
+      // const result = await uploadFromBuffer(image);
 
-      const id = uploadedImageResponse.public_id;
+      const result = await cloudinary.uploader.upload(dataUri, {
+        folder: "devlents-avatars",
+        public_id: session.user.id,
+        overwrite: true,
+      });
 
-      const url = cloudinary.url(id, {
+      const url = cloudinary.url(result.public_id, {
         gravity: "face",
         width: 200,
         height: 200,
@@ -93,3 +115,20 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+const uploadFromBuffer = (buffer: Buffer) => {
+  return new Promise((resolve, reject) => {
+    const cld_upload_stream = cloudinary.uploader.upload_stream(
+      {},
+      (error: any, result: any) => {
+        if (result) {
+          resolve(result);
+        } else {
+          reject(error);
+        }
+      },
+    );
+
+    streamifier.createReadStream(buffer).pipe(cld_upload_stream);
+  });
+};

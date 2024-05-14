@@ -12,6 +12,14 @@ const AvatarUpload = () => {
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    if (!file.type.startsWith("image")) {
+      toast.error("Invalid image file type");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image file size should be less than 5MB");
+      return;
+    }
 
     const formData = new FormData();
     formData.append("avatar", file);

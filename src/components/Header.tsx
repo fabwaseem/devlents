@@ -2,7 +2,13 @@
 import { navLinks } from "@/lib/config";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useRef, useState, useTransition } from "react";
+import React, {
+  startTransition,
+  useEffect,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import { Button } from "./ui/Button";
 import { Icons } from "./Icons";
 import { usePathname } from "next/navigation";
@@ -18,13 +24,19 @@ import {
 import { signOut } from "next-auth/react";
 import { Logos } from "./Logos";
 import { Tooltip } from "react-tooltip";
-import { getUserLents } from "@/actions/user/user";
+import {
+  geUserUnreadNotifications,
+  getUserLents,
+  markAllNotificationsAsRead,
+  markNotificationAsRead,
+} from "@/actions/user/user";
 import {
   lentsOnComponentFavourite,
   lentsOnComponentPublish,
   lentsOnComponentUpvote,
 } from "@/lib/admin-config";
-import { toast } from "react-toastify";
+import moment from "moment";
+import { Notification } from "@prisma/client";
 
 const Header = ({ session }: { session: Session | null }) => {
   const [isPending, startTransition] = useTransition();
@@ -34,6 +46,8 @@ const Header = ({ session }: { session: Session | null }) => {
   const annoucementRef = useRef<HTMLDivElement>(null);
   const [mobileMenuIsOpen, setMobileMenuIsOpen] = useState<boolean>(false);
   const [lents, setLents] = useState<number>(0);
+  const [unreadNotifications, setUnreadNotifications] =
+    useState<Notification[]>();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -65,7 +79,15 @@ const Header = ({ session }: { session: Session | null }) => {
           setLents(lents);
         })
         .catch((error) => {
-          toast.error(error.message);
+          console.log(error);
+        });
+
+      geUserUnreadNotifications(session.user.id!)
+        .then((notifications) => {
+          setUnreadNotifications(notifications);
+        })
+        .catch((error) => {
+          console.log(error);
         });
     }
   }, [session]);
@@ -242,6 +264,135 @@ const Header = ({ session }: { session: Session | null }) => {
                       Create
                     </Link>
                   </Button>
+                </li>
+                <li>
+                  <DropdownMenu modal={false}>
+                    <DropdownMenuTrigger asChild>
+                      <div className="relative flex h-[42px] cursor-pointer items-center justify-center rounded-lg bg-gray-100 pl-3.5 pr-4 font-bold dark:bg-dark-200">
+                        <Icons.bell />{" "}
+                        {unreadNotifications?.length ? (
+                          <div className="absolute right-2 top-2 h-2 w-2 rounded-full bg-primary"></div>
+                        ) : null}
+                      </div>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-80">
+                      <div className=" flex items-center justify-between px-2 py-2 text-base font-semibold">
+                        <div className="flex items-center gap-2">
+                          <Icons.bell />
+                          Notifications
+                        </div>
+                        {unreadNotifications?.length !== 0 ? (
+                          <>
+                            <Button
+                              size={"icon"}
+                              variant={"icon"}
+                              onClick={() => {
+                                startTransition(() => {
+                                  markAllNotificationsAsRead(
+                                    session.user.id,
+                                  ).finally(() => {
+                                    setUnreadNotifications([]);
+                                  });
+                                });
+                              }}
+                              data-tooltip-id="tooltip"
+                              data-tooltip-content="Mark all as read"
+                              data-tooltip-place="top"
+                            >
+                              <Icons.check size={16} />
+                            </Button>
+                            <Tooltip id="tooltip" />
+                          </>
+                        ) : null}
+                      </div>
+
+                      {unreadNotifications?.length === 0 ? (
+                        <div>
+                          <p className="text-center text-gray-500 dark:text-gray-500">
+                            No new notifications
+                          </p>
+                        </div>
+                      ) : null}
+                      {unreadNotifications?.map((notification, index) => {
+                        const type = notification.type;
+
+                        let iconBg = "bg-primary";
+                        let icon = <Icons.bell size={16} />;
+                        let heading = "";
+                        let message = "";
+
+                        switch (type) {
+                          case "COMPONENT_APPROVED":
+                            iconBg = "bg-green-500";
+                            icon = <Icons.check size={16} />;
+                            heading = "Component published";
+                            message =
+                              "Your component has been approved and live on the link";
+                            break;
+                          case "COMPONENT_REJECTED":
+                            iconBg = "bg-red-500";
+                            icon = <Icons.X size={16} />;
+                            heading = "Component rejected";
+                            message =
+                              "Your component has been rejected by the admin";
+                            break;
+                          default:
+                            iconBg = "bg-green-500";
+                            icon = <Icons.check size={16} />;
+                            message = notification.message;
+                            break;
+                        }
+
+                        return (
+                          <DropdownMenuItem>
+                            <div className="group relative flex items-start gap-3 py-2.5">
+                              <div
+                                className={`mt-1 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md  text-white
+        ${iconBg}
+        `}
+                              >
+                                {icon}
+                              </div>
+
+                              <div>
+                                <p className="text-sm font-semibold">
+                                  {heading}
+                                </p>
+                                <p className="text-xs  text-gray-500 dark:text-gray-500">
+                                  {message}
+                                </p>
+                                {/* date */}
+                                <p className="text-right text-xs text-gray-500 dark:text-gray-500">
+                                  {moment(notification.createdAt).fromNow()}
+                                </p>
+                              </div>
+
+                              <Button
+                                size={"icon"}
+                                variant={"icon"}
+                                className="absolute right-2 top-1/2 -translate-y-1/2 transform opacity-0 transition-all group-hover:right-0 group-hover:opacity-100"
+                                onClick={() => {
+                                  startTransition(() => {
+                                    markNotificationAsRead(
+                                      notification.id,
+                                    ).finally(() => {
+                                      setUnreadNotifications((prev) =>
+                                        prev?.filter(
+                                          (n) => n.id !== notification.id,
+                                        ),
+                                      );
+                                    });
+                                  });
+                                }}
+                              >
+                                <Icons.check size={16} />
+                              </Button>
+                            </div>
+                          </DropdownMenuItem>
+                        );
+                      })}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </li>
                 <li>
                   <DropdownMenu modal={false}>

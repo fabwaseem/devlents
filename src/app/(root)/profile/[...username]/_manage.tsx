@@ -19,15 +19,24 @@ import { toast } from "react-toastify";
 import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
 import { type User } from "@prisma/client";
+import { useRouter } from "next/navigation";
 
 const ManageProfile = ({ user }: { user: User }) => {
-
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const router = useRouter();
 
   const formSchema = z.object({
     name: z.string().min(2, {
       message: "Name must be at least 2 characters long",
     }),
+    username: z
+      .string()
+      .min(5, {
+        message: "Username must be at least 5 characters long",
+      })
+      .max(20, {
+        message: "Username cannot be longer than 20 characters",
+      }),
     website: z.union([z.literal(""), z.string().trim().url()]),
     location: z.string(),
     company: z.string(),
@@ -40,6 +49,7 @@ const ManageProfile = ({ user }: { user: User }) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: user?.name ?? "",
+      username: user?.username ?? "",
       website: user?.website ?? "",
       location: user?.location ?? "",
       company: user?.company ?? "",
@@ -66,7 +76,11 @@ const ManageProfile = ({ user }: { user: User }) => {
     if (response.status === 201) {
       toast.success(resData.msg);
       setOpen(false);
-      window.location.reload();
+      if (values.username !== user.username) {
+        window.location.replace(`/profile/${values.username}`);
+      } else {
+        window.location.reload();
+      }
     } else {
       toast.error(resData.msg);
     }
@@ -132,6 +146,25 @@ const ManageProfile = ({ user }: { user: User }) => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="space-y-6 ">
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        id="username"
+                        required
+                        placeholder="Enter a unique username"
+                        label="Username"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <div className="flex flex-col gap-6 md:flex-row md:gap-2">
                 <FormField
                   control={form.control}
