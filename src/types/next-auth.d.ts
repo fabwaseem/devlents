@@ -1,4 +1,4 @@
-import { Role } from "@prisma/client";
+import { type Role } from "@prisma/client";
 import { type User } from "next-auth";
 
 type UserId = string;

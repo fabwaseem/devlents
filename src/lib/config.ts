@@ -1,6 +1,6 @@
 import { Icons } from "@/components/Icons";
 import { Logos } from "@/components/Logos";
-import { ComponentStatus, FeedbackStatus, Role } from "@prisma/client";
+import type { ComponentStatus, FeedbackStatus, Role } from "@prisma/client";
 
 export const componentCategories = [
   {

@@ -1,4 +1,4 @@
-import { Component, ComponentStatus, Feedback } from "@prisma/client";
+import type { Component, ComponentStatus, Feedback } from "@prisma/client";
 import { type LucideIcon } from "lucide-react";
 
 export type SidebarNavItem = {

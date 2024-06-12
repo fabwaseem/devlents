@@ -1,6 +1,6 @@
 import { getVerificationToken } from "@/data/token";
 import { db } from "@/server/db";
-import { VerificationTokenType } from "@prisma/client";
+import type { VerificationTokenType } from "@prisma/client";
 import { v4 as uuid } from "uuid";
 
 const expireDuration = 1000 * 60 * 60 * 0.05; // 5 minutes

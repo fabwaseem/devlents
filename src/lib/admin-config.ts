@@ -1,10 +1,9 @@
-import { Role } from "@prisma/client";
+import type { Role } from "@prisma/client";
 import {
   Component,
   LayoutDashboard,
   LucideIcon,
   Rss,
-  User,
   Users,
 } from "lucide-react";
 

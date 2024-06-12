@@ -47,15 +47,15 @@ const Footer = () => {
             <h3 className="mb-8 text-lg font-medium">Get In touch</h3>
             <p className="mb-3">Need Support?</p>
             <p className="mb-3">
-              <a href={`mailto:${contactDetails.email}`} className="link-btn">
+              <a href={`mailto:${contactDetails.email}`} className="link-btn normal-case">
                 {contactDetails.email}
               </a>
             </p>
-            <p className="mb-3">
+            {/* <p className="mb-3">
               <a href={`tel:${contactDetails.phone}`} className="link-btn">
                 {contactDetails.phone}
               </a>
-            </p>
+            </p> */}
             <ul className="social-link flex items-center gap-4 max-lg:justify-center">
               {socialLinks.map((link, index) => (
                 <li key={index}>
@@ -93,15 +93,15 @@ const Footer = () => {
             </p>
             <ul className="gap-15 flex items-center gap-5  max-lg:justify-center lg:ml-auto">
               <li>
-                <Link href="privacy-policy" className="link-btn">
+                <Link href="/privacy-policy" className="link-btn">
                   Privacy Policy
                 </Link>
               </li>
-              <li>
-                <Link href="terms-conditions" className="link-btn">
+              {/* <li>
+                <Link href="/terms-conditions" className="link-btn">
                   Terms &amp; Conditions
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
         </div>

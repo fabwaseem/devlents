@@ -1,5 +1,5 @@
 import { type ComponentType, type ComponentStatus } from "@prisma/client";
-import { Session } from "next-auth";
+import type { Session } from "next-auth";
 import { adminRoles } from "../admin-config";
 
 type SearchParams = {

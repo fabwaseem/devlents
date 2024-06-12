@@ -37,6 +37,7 @@ interface Props {
   };
 }
 
+
 const page = async ({ params, searchParams }: Props) => {
   const page = searchParams.page ?? 1;
   if (page < 1) {

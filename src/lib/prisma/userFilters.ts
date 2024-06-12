@@ -1,4 +1,3 @@
-import { Session } from "next-auth";
 
 type SearchParams = {
   page?: number;

@@ -1,5 +1,6 @@
 import Feedback from "@/components/Feedback";
 import Footer from "@/components/Footer";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 import Header from "@/components/Header";
 import { Parallax } from "@/components/aos";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -17,6 +18,7 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
       <main className="min-h-screen">{children}</main>
       {session && <Feedback />}
       <Footer />
+      <GoogleAnalytics />
     </>
   );
 };

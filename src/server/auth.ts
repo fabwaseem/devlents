@@ -9,7 +9,7 @@ import { faker } from "@faker-js/faker";
 
 import { env } from "@/env";
 import { db } from "@/server/db";
-import { Role } from "@prisma/client";
+import type  { Role } from "@prisma/client";
 
 /**
  * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
